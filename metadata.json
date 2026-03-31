@@ -1,0 +1,5 @@
+{
+  "name": "KhojTalas",
+  "description": "A Nepal-focused lost & found web platform to reunite people with their lost belongings.",
+  "requestFramePermissions": ["geolocation"]
+}

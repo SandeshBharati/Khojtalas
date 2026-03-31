@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the KhojTalas platform.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The user's unique ID." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "name": { "type": "string", "description": "The user's full name." },
+        "role": { "type": "string", "enum": ["user", "admin"], "description": "The user's role." },
+        "phone": { "type": "string", "description": "The user's phone number." },
+        "avatarUrl": { "type": "string", "description": "The user's profile picture URL." },
+        "notifications": {
+          "type": "object",
+          "properties": {
+            "emailOnApproval": { "type": "boolean" },
+            "emailOnMatch": { "type": "boolean" },
+            "inAppNotifications": { "type": "boolean" }
+          },
+          "description": "User's notification preferences."
+        },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the user was created." }
+      },
+      "required": ["uid", "email", "name", "role", "createdAt"]
+    },
+    "Item": {
+      "title": "Item",
+      "description": "A lost or found item report.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The ID of the user who reported the item." },
+        "type": { "type": "string", "enum": ["lost", "found"], "description": "Whether the item was lost or found." },
+        "category": { "type": "string", "enum": ["electronics", "wallet", "person", "keys", "clothing", "jewelry", "pets", "bags", "other"], "description": "The category of the item." },
+        "brand": { "type": "string", "description": "The brand of the item (e.g., Apple, Samsung)." },
+        "model": { "type": "string", "description": "The model of the item (e.g., iPhone 15)." },
+        "color": { "type": "string", "description": "The color of the item." },
+        "serialNumber": { "type": "string", "description": "The serial number or unique identifier." },
+        "reward": { "type": "number", "description": "Offered reward for lost items (optional)." },
+        "contactName": { "type": "string", "description": "Contact name for this report." },
+        "contactEmail": { "type": "string", "description": "Contact email for this report." },
+        "contactPhone": { "type": "string", "description": "Contact phone for this report." },
+        "description": { "type": "string", "description": "A detailed description of the item." },
+        "district": { "type": "string", "description": "The district where the item was lost or found." },
+        "city": { "type": "string", "description": "The city where the item was lost or found." },
+        "locationFromLat": { "type": "number", "description": "Latitude of the primary location." },
+        "locationFromLng": { "type": "number", "description": "Longitude of the primary location." },
+        "locationToLat": { "type": "number", "description": "Latitude of the secondary location (optional)." },
+        "locationToLng": { "type": "number", "description": "Longitude of the secondary location (optional)." },
+        "timeFrom": { "type": "string", "format": "date-time", "description": "Start time of the incident." },
+        "timeTo": { "type": "string", "format": "date-time", "description": "End time of the incident (optional)." },
+        "photoData": { "type": "string", "description": "Base64 encoded photo data." },
+        "videoData": { "type": "string", "description": "Base64 encoded video data." },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "matched"], "description": "The current status of the report." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the report was created." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "When the report was last updated." }
+      },
+      "required": ["userId", "type", "category", "description", "locationFromLat", "locationFromLng", "timeFrom", "status", "createdAt"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "A potential match between a lost and found item.",
+      "type": "object",
+      "properties": {
+        "lostItemId": { "type": "string", "description": "The ID of the lost item." },
+        "foundItemId": { "type": "string", "description": "The ID of the found item." },
+        "matchScore": { "type": "number", "description": "The AI-generated match score (0-100)." },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "rejected"], "description": "The status of the match." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the match was created." }
+      },
+      "required": ["lostItemId", "foundItemId", "matchScore", "status", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A real-time notification for a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The ID of the user receiving the notification." },
+        "message": { "type": "string", "description": "The notification message." },
+        "read": { "type": "boolean", "description": "Whether the notification has been read." },
+        "type": { "type": "string", "enum": ["match_found", "system"], "description": "The type of notification." },
+        "matchId": { "type": "string", "description": "Optional reference to a match." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the notification was created." }
+      },
+      "required": ["userId", "message", "read", "type", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles."
+    },
+    "/items/{itemId}": {
+      "schema": { "$ref": "#/entities/Item" },
+      "description": "Stores lost and found item reports."
+    },
+    "/matches/{matchId}": {
+      "schema": { "$ref": "#/entities/Match" },
+      "description": "Stores potential matches between items."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Stores user notifications."
+    }
+  }
+}
