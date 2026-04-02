@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+celery
+pillow
+imagehash
+sentence-transformers
+scikit-learn
