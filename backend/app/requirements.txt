@@ -1,6 +1,7 @@
-# requirements.txt for backend/app
-# Add your backend dependencies here
-flask
-# Add other packages as needed, e.g.:
-# fastapi
-# uvicorn
+fastapi
+uvicorn[standard]
+celery
+pillow
+imagehash
+sentence-transformers
+scikit-learn
