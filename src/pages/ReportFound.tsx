@@ -22,13 +22,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
-  });
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { storage } from '../firebase';
+
+const uploadFileToStorage = async (file: File, path: string): Promise<string> => {
+  const storageRef = ref(storage, path);
+  await uploadBytes(storageRef, file);
+  return await getDownloadURL(storageRef);
 };
 
 import { MapPin, Clock, Tag, Search, Loader2, User, Smartphone, Wallet, FileText, Gem, Shirt, PawPrint, Key, Briefcase, Car, Music, Glasses, Package } from 'lucide-react';
@@ -188,22 +188,22 @@ export default function ReportFound() {
     try {
       let photoData = null;
       if (photo) {
-        if (photo.size > 500000) {
-          toast.error('Photo must be less than 500KB');
+        if (photo.size > 5000000) {
+          toast.error('Photo must be less than 5MB');
           setIsSubmitting(false);
           return;
         }
-        photoData = await fileToBase64(photo);
+        photoData = await uploadFileToStorage(photo, `items/${user.uid}/${Date.now()}_photo`);
       }
 
       let videoData = null;
       if (video) {
-        if (video.size > 5000000) {
-          toast.error('Video must be less than 5MB');
+        if (video.size > 50000000) {
+          toast.error('Video must be less than 50MB');
           setIsSubmitting(false);
           return;
         }
-        videoData = await fileToBase64(video);
+        videoData = await uploadFileToStorage(video, `items/${user.uid}/${Date.now()}_video`);
       }
 
       const itemData: any = {
