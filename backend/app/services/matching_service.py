@@ -3,18 +3,23 @@ import json
 from datetime import datetime
 from PIL import Image
 import imagehash
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Load the model once when the module is imported
-# This runs fully local, no API key needed
-text_model = SentenceTransformer('all-MiniLM-L6-v2')
+# Lazy-load the model only when first needed to avoid startup timeout on Render
+_text_model = None
+
+def _get_text_model():
+    global _text_model
+    if _text_model is None:
+        from sentence_transformers import SentenceTransformer
+        _text_model = SentenceTransformer('all-MiniLM-L6-v2')
+    return _text_model
 
 def compute_text_embedding(text: str) -> list[float]:
     """
     Computes the embedding vector for a given text string.
     """
-    embedding = text_model.encode(text)
+    embedding = _get_text_model().encode(text)
     return embedding.tolist()
 
 def compute_image_hash(image_path: str) -> str:
