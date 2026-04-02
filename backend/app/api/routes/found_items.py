@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Dict, Any
-from app.services.tasks.match_tasks import run_matching
 
 router = APIRouter()
 
