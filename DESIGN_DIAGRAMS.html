@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DESIGN_DIAGRAMS.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="khojtalas--system-design--diagrams">KhojTalas — System Design &amp; Diagrams</h1>
+<p><strong>Version:</strong> 1.0.0<br>
+<strong>Last Updated:</strong> April 9, 2026<br>
+<strong>Project:</strong> KhojTalas — Nepal Lost &amp; Found Platform</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#51-architecture-diagram">5.1 Architecture Diagram</a></li>
+<li><a href="#52-er-diagram">5.2 ER Diagram</a></li>
+<li><a href="#53-database-design">5.3 Database Design</a>
+<ul>
+<li><a href="#531-database-schema">5.3.1 Database Schema</a></li>
+<li><a href="#532-table-structures">5.3.2 Table Structures</a></li>
+<li><a href="#533-normalization-1nf-2nf-3nf">5.3.3 Normalization (1NF, 2NF, 3NF)</a></li>
+<li><a href="#534-constraints-pk-fk-unique-not-null">5.3.4 Constraints (PK, FK, Unique, Not Null)</a></li>
+</ul>
+</li>
+<li><a href="#54-uml-diagrams">5.4 UML Diagrams</a>
+<ul>
+<li><a href="#541-class-diagram">5.4.1 Class Diagram</a></li>
+<li><a href="#542-sequence-diagram">5.4.2 Sequence Diagram</a></li>
+<li><a href="#543-use-case-diagram">5.4.3 Use Case Diagram</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="51-architecture-diagram">5.1 Architecture Diagram</h2>
+<p>The system follows a <strong>decoupled three-tier architecture</strong> with a React frontend, Firebase as the middleware/database layer, and a Python FastAPI backend with an async Celery task queue.</p>
+<pre><code class="language-mermaid"><div class="mermaid">graph TB
+    subgraph Users["👥 End Users"]
+        Browser["🌐 Web Browser"]
+        AdminUser["🔒 Admin Browser"]
+    end
+
+    subgraph Frontend["Frontend Layer (Vercel)"]
+        ReactApp["⚛️ React 19 + TypeScript\nVite 6 | Port 3000"]
+        AdminApp["⚛️ Admin Dashboard\nVite 6 | Port 4000"]
+    end
+
+    subgraph Firebase["Firebase Services (Google Cloud)"]
+        FireAuth["🔐 Firebase Auth\n(Email, Google, GitHub, Facebook, TOTP MFA)"]
+        FireRTDB["🗄️ Firebase Realtime Database\n(Primary Data Store)"]
+        FireStorage["📦 Firebase Storage\n(Media Files)"]
+    end
+
+    subgraph Backend["Backend Layer (Python)"]
+        FastAPI["🚀 FastAPI + Uvicorn\n(ASGI Server)"]
+        FireAdmin["🔑 Firebase Admin SDK\n(Server-side Access)"]
+    end
+
+    subgraph TaskQueue["Async Task Queue"]
+        Celery["⚙️ Celery Workers"]
+        Redis["🔴 Redis Broker"]
+        MatchTask["🤖 match_tasks\n(AI Matching Pipeline)"]
+        EmailTask["📧 email_tasks\n(SMTP Emails)"]
+    end
+
+    subgraph AI["AI / ML Services"]
+        SentenceT["🧠 Sentence Transformers\n(all-MiniLM-L6-v2)"]
+        ImageHash["🖼️ Pillow + ImageHash\n(Perceptual Hashing)"]
+        Gemini["✨ Google Gemini API\n(Client-side Matching)"]
+    end
+
+    subgraph External["External Services"]
+        SMTP["📮 Gmail SMTP\n(Transactional Emails)"]
+        EmailJS["📬 EmailJS\n(Client-side Emails)"]
+    end
+
+    Browser --> ReactApp
+    AdminUser --> AdminApp
+    ReactApp -->|"SDK Calls"| FireAuth
+    ReactApp -->|"CRUD Operations"| FireRTDB
+    ReactApp -->|"File Upload"| FireStorage
+    ReactApp -->|"REST API"| FastAPI
+    ReactApp -->|"AI Matching"| Gemini
+    ReactApp -->|"Email"| EmailJS
+    AdminApp -->|"SDK Calls"| FireAuth
+    AdminApp -->|"Admin CRUD"| FireRTDB
+    FastAPI --> FireAdmin
+    FireAdmin --> FireRTDB
+    FastAPI -->|"WebSocket"| Browser
+    FastAPI -->|"Dispatch Tasks"| Celery
+    Celery --> Redis
+    Celery --> MatchTask
+    Celery --> EmailTask
+    MatchTask --> SentenceT
+    MatchTask --> ImageHash
+    MatchTask --> FireAdmin
+    EmailTask --> SMTP
+</div></code></pre>
+<h3 id="architecture-components-summary">Architecture Components Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Component</th>
+<th>Technology</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Presentation</strong></td>
+<td>Main App</td>
+<td>React 19 + Vite 6</td>
+<td>User-facing UI (report, browse, match review)</td>
+</tr>
+<tr>
+<td><strong>Presentation</strong></td>
+<td>Admin App</td>
+<td>React 19 + Vite 6</td>
+<td>Admin dashboard (review queue, user mgmt)</td>
+</tr>
+<tr>
+<td><strong>Service</strong></td>
+<td>Firebase Auth</td>
+<td>Firebase SDK 12</td>
+<td>Authentication (Email, OAuth, TOTP MFA)</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Firebase RTDB</td>
+<td>Firebase Realtime DB</td>
+<td>Primary data store for all collections</td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td>Firebase Storage</td>
+<td>Firebase Storage</td>
+<td>Media file storage (photos, videos)</td>
+</tr>
+<tr>
+<td><strong>Application</strong></td>
+<td>FastAPI Server</td>
+<td>Python + Uvicorn</td>
+<td>REST API + WebSocket notifications</td>
+</tr>
+<tr>
+<td><strong>Processing</strong></td>
+<td>Celery Workers</td>
+<td>Celery + Redis</td>
+<td>Async AI matching &amp; email delivery</td>
+</tr>
+<tr>
+<td><strong>AI/ML</strong></td>
+<td>Text Matching</td>
+<td>Sentence Transformers</td>
+<td>384-dim NLP embeddings + cosine similarity</td>
+</tr>
+<tr>
+<td><strong>AI/ML</strong></td>
+<td>Image Matching</td>
+<td>Pillow + ImageHash</td>
+<td>Perceptual hashing (pHash)</td>
+</tr>
+<tr>
+<td><strong>AI/ML</strong></td>
+<td>Multi-modal</td>
+<td>Google Gemini API</td>
+<td>Client-side AI matching with vision</td>
+</tr>
+<tr>
+<td><strong>External</strong></td>
+<td>Email (Server)</td>
+<td>Gmail SMTP</td>
+<td>Match notification emails</td>
+</tr>
+<tr>
+<td><strong>External</strong></td>
+<td>Email (Client)</td>
+<td>EmailJS</td>
+<td>Lightweight client-side emails</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="52-er-diagram">5.2 ER Diagram</h2>
+<p>The Entity-Relationship diagram shows the four primary entities and their relationships in the KhojTalas database.</p>
+<pre><code class="language-mermaid"><div class="mermaid">erDiagram
+    USERS {
+        string uid PK "Firebase Auth UID"
+        string email "User email (unique)"
+        string name "Display name"
+        string phone "Nepal phone 98/97XXXXXXXX"
+        string avatarUrl "Profile picture URL/Base64"
+        string role "user | admin"
+        boolean is_active "Account active status"
+        timestamp createdAt "Account creation time"
+        boolean notif_emailOnApproval "Email on approval pref"
+        boolean notif_emailOnMatch "Email on match pref"
+        boolean notif_inAppNotifications "In-app notif pref"
+    }
+
+    ITEMS {
+        string itemId PK "Auto-generated ID"
+        string userId FK "Owner UID → USERS.uid"
+        string type "lost | found"
+        string category "Electronics Pets etc"
+        string status "pending | approved | rejected | resolved"
+        string description "Free-text description"
+        string brand "Item brand"
+        string model "Item model"
+        string color "Primary color"
+        string secondaryColor "Secondary color"
+        string district "Nepal district"
+        string city "Municipality"
+        float locationFromLat "From latitude"
+        float locationFromLng "From longitude"
+        float locationToLat "To latitude (lost only)"
+        float locationToLng "To longitude (lost only)"
+        string lostLocationDescription "Lost location text"
+        string foundLocationDescription "Found location text"
+        string timeFrom "ISO timestamp start"
+        string timeTo "ISO timestamp end"
+        string contactName "Reporter name"
+        string contactEmail "Reporter email"
+        string contactPhone "Reporter phone"
+        string photoData "Base64 photo max 250KB"
+        string videoData "Base64 video max 400KB"
+        float estimatedValue "Value or reward"
+        boolean policeReportFiled "Police report filed"
+        string policeReportNumber "Report number"
+        boolean match_processed "Matching completed"
+        string text_embedding "Cached 384-dim embedding"
+        string image_hashes "Cached perceptual hashes"
+        timestamp createdAt "Submission timestamp"
+        string reviewed_by "Admin UID who reviewed"
+        timestamp reviewed_at "Review timestamp"
+        string admin_note "Admin review note"
+    }
+
+    MATCHES {
+        string matchId PK "Auto-generated ID"
+        string lostItemId FK "Lost item ref → ITEMS.itemId"
+        string foundItemId FK "Found item ref → ITEMS.itemId"
+        float matchScore "Composite score 0-100"
+        string status "pending | resolved | rejected"
+        float text_score "Text similarity 0-1"
+        float image_score "Image similarity 0-1"
+        float location_score "Location proximity 0-1"
+        float time_score "Time overlap 0-1"
+        timestamp createdAt "Match creation time"
+        timestamp resolvedAt "Match resolution time"
+    }
+
+    NOTIFICATIONS {
+        string notificationId PK "Auto-generated ID"
+        string userId FK "Target user → USERS.uid"
+        string type "match_found | item_approved | item_rejected | system"
+        string message "Notification text"
+        string matchId FK "Optional → MATCHES.matchId"
+        boolean read "Read or unread status"
+        timestamp createdAt "Notification creation time"
+    }
+
+    USERS ||--o{ ITEMS : "reports"
+    USERS ||--o{ NOTIFICATIONS : "receives"
+    ITEMS ||--o{ MATCHES : "lost item in match"
+    ITEMS ||--o{ MATCHES : "found item in match"
+    MATCHES ||--o{ NOTIFICATIONS : "triggers"
+</div></code></pre>
+<h3 id="relationship-summary">Relationship Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Relationship</th>
+<th>Cardinality</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USERS → ITEMS</td>
+<td>One-to-Many</td>
+<td>A user can report multiple lost/found items</td>
+</tr>
+<tr>
+<td>USERS → NOTIFICATIONS</td>
+<td>One-to-Many</td>
+<td>A user can receive multiple notifications</td>
+</tr>
+<tr>
+<td>ITEMS → MATCHES (lost)</td>
+<td>One-to-Many</td>
+<td>A lost item can appear in multiple matches</td>
+</tr>
+<tr>
+<td>ITEMS → MATCHES (found)</td>
+<td>One-to-Many</td>
+<td>A found item can appear in multiple matches</td>
+</tr>
+<tr>
+<td>MATCHES → NOTIFICATIONS</td>
+<td>One-to-Many</td>
+<td>A match can trigger multiple notifications</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="53-database-design">5.3 Database Design</h2>
+<h3 id="531-database-schema">5.3.1 Database Schema</h3>
+<p>KhojTalas uses <strong>Firebase Realtime Database (RTDB)</strong> — a NoSQL, JSON-based cloud database. While RTDB is schema-less, the application enforces a consistent schema through application-level validation and security rules.</p>
+<p><strong>Database Path Structure:</strong></p>
+<pre class="hljs"><code><div>root/
+├── users/
+│   └── {uid}/                    → User profile document
+├── items/
+│   └── {itemId}/                 → Item report document
+├── matches/
+│   └── {matchId}/                → Match result document
+└── notifications/
+    └── {notificationId}/         → Notification document
+</div></code></pre>
+<p><strong>Indexes (defined in <code>database.rules.json</code>):</strong></p>
+<pre class="hljs"><code><div>{
+  <span class="hljs-attr">"items"</span>:         { <span class="hljs-attr">".indexOn"</span>: [<span class="hljs-string">"status"</span>, <span class="hljs-string">"userId"</span>, <span class="hljs-string">"type"</span>, <span class="hljs-string">"createdAt"</span>] },
+  <span class="hljs-attr">"matches"</span>:       { <span class="hljs-attr">".indexOn"</span>: [<span class="hljs-string">"status"</span>, <span class="hljs-string">"lostItemId"</span>, <span class="hljs-string">"foundItemId"</span>] },
+  <span class="hljs-attr">"notifications"</span>: { <span class="hljs-attr">".indexOn"</span>: [<span class="hljs-string">"userId"</span>, <span class="hljs-string">"read"</span>, <span class="hljs-string">"createdAt"</span>] }
+}
+</div></code></pre>
+<hr>
+<h3 id="532-table-structures">5.3.2 Table Structures</h3>
+<p>Although Firebase RTDB is a NoSQL document store, the following presents the logical table structures in a relational format for documentation purposes.</p>
+<h4 id="table-1-users">Table 1: USERS</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Size/Format</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>uid</code></td>
+<td>STRING</td>
+<td>28 chars (Firebase UID)</td>
+<td>Yes</td>
+<td>Auto (Firebase Auth)</td>
+<td>Primary Key — Firebase Auth UID</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>email</code></td>
+<td>STRING</td>
+<td>max 254 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>User's email address (Unique)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>name</code></td>
+<td>STRING</td>
+<td>max 100 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>Display name</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>phone</code></td>
+<td>STRING</td>
+<td>10 digits</td>
+<td>No</td>
+<td>NULL</td>
+<td>Nepal phone (<code>^(98\|97)\d{8}$</code>)</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>avatarUrl</code></td>
+<td>STRING (TEXT)</td>
+<td>URL or Base64</td>
+<td>No</td>
+<td>NULL</td>
+<td>Profile picture</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>role</code></td>
+<td>STRING (ENUM)</td>
+<td><code>user</code> | <code>admin</code></td>
+<td>Yes</td>
+<td><code>&quot;user&quot;</code></td>
+<td>User role</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>is_active</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>No</td>
+<td><code>true</code></td>
+<td>Account status</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>createdAt</code></td>
+<td>TIMESTAMP</td>
+<td>ISO 8601</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Account creation timestamp</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>notifications.emailOnApproval</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>No</td>
+<td><code>true</code></td>
+<td>Email on item approval</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>notifications.emailOnMatch</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>No</td>
+<td><code>true</code></td>
+<td>Email on match found</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>notifications.inAppNotifications</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>No</td>
+<td><code>true</code></td>
+<td>In-app notification toggle</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-2-items">Table 2: ITEMS</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Size/Format</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>itemId</code></td>
+<td>STRING</td>
+<td>Auto-generated push key</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Primary Key</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>userId</code></td>
+<td>STRING</td>
+<td>28 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>Foreign Key → USERS.uid</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>type</code></td>
+<td>STRING (ENUM)</td>
+<td><code>lost</code> | <code>found</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Report type</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>category</code></td>
+<td>STRING (ENUM)</td>
+<td>12+ categories</td>
+<td>Yes</td>
+<td>—</td>
+<td>Item category</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>status</code></td>
+<td>STRING (ENUM)</td>
+<td><code>pending</code>|<code>approved</code>|<code>rejected</code>|<code>resolved</code></td>
+<td>Yes</td>
+<td><code>&quot;pending&quot;</code></td>
+<td>Review status</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>description</code></td>
+<td>STRING (TEXT)</td>
+<td>max 2000 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>Free-text description</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>brand</code></td>
+<td>STRING</td>
+<td>max 100 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Item brand</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>model</code></td>
+<td>STRING</td>
+<td>max 100 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Item model</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>color</code></td>
+<td>STRING</td>
+<td>max 50 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Primary color</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>secondaryColor</code></td>
+<td>STRING</td>
+<td>max 50 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Secondary color</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>district</code></td>
+<td>STRING</td>
+<td>Nepal district name</td>
+<td>No</td>
+<td>NULL</td>
+<td>District (77 options)</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>city</code></td>
+<td>STRING</td>
+<td>City/municipality</td>
+<td>No</td>
+<td>NULL</td>
+<td>City within district</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>locationFromLat</code></td>
+<td>FLOAT</td>
+<td>-90.0 to 90.0</td>
+<td>Yes</td>
+<td>—</td>
+<td>From-point latitude</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>locationFromLng</code></td>
+<td>FLOAT</td>
+<td>-180.0 to 180.0</td>
+<td>Yes</td>
+<td>—</td>
+<td>From-point longitude</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>locationToLat</code></td>
+<td>FLOAT</td>
+<td>-90.0 to 90.0</td>
+<td>No</td>
+<td>NULL</td>
+<td>To-point latitude (lost only)</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>locationToLng</code></td>
+<td>FLOAT</td>
+<td>-180.0 to 180.0</td>
+<td>No</td>
+<td>NULL</td>
+<td>To-point longitude (lost only)</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>lostLocationDescription</code></td>
+<td>STRING (TEXT)</td>
+<td>max 500 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Lost location text</td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>foundLocationDescription</code></td>
+<td>STRING (TEXT)</td>
+<td>max 500 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Found location text</td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>timeFrom</code></td>
+<td>STRING</td>
+<td>ISO 8601 datetime</td>
+<td>Yes</td>
+<td>—</td>
+<td>When lost/found (start)</td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>timeTo</code></td>
+<td>STRING</td>
+<td>ISO 8601 datetime</td>
+<td>No</td>
+<td>NULL</td>
+<td>When lost (end of window)</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>contactName</code></td>
+<td>STRING</td>
+<td>max 100 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>Reporter name</td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>contactEmail</code></td>
+<td>STRING</td>
+<td>max 254 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>Reporter email</td>
+</tr>
+<tr>
+<td>23</td>
+<td><code>contactPhone</code></td>
+<td>STRING</td>
+<td>10 digits</td>
+<td>Yes</td>
+<td>—</td>
+<td>Reporter phone</td>
+</tr>
+<tr>
+<td>24</td>
+<td><code>photoData</code></td>
+<td>STRING (BLOB)</td>
+<td>max 250 KB (Base64)</td>
+<td>No</td>
+<td>NULL</td>
+<td>Item photo</td>
+</tr>
+<tr>
+<td>25</td>
+<td><code>videoData</code></td>
+<td>STRING (BLOB)</td>
+<td>max 400 KB (Base64)</td>
+<td>No</td>
+<td>NULL</td>
+<td>Item video</td>
+</tr>
+<tr>
+<td>26</td>
+<td><code>estimatedValue</code></td>
+<td>FLOAT</td>
+<td>≥ 0</td>
+<td>No</td>
+<td>NULL</td>
+<td>Estimated value / reward</td>
+</tr>
+<tr>
+<td>27</td>
+<td><code>policeReportFiled</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Police report filed?</td>
+</tr>
+<tr>
+<td>28</td>
+<td><code>policeReportNumber</code></td>
+<td>STRING</td>
+<td>max 50 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Police report number</td>
+</tr>
+<tr>
+<td>29</td>
+<td><code>match_processed</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Matching completed?</td>
+</tr>
+<tr>
+<td>30</td>
+<td><code>text_embedding</code></td>
+<td>ARRAY (FLOAT)</td>
+<td>384 dimensions</td>
+<td>No</td>
+<td>NULL</td>
+<td>Cached text embedding vector</td>
+</tr>
+<tr>
+<td>31</td>
+<td><code>image_hashes</code></td>
+<td>ARRAY (STRING)</td>
+<td>pHash strings</td>
+<td>No</td>
+<td>NULL</td>
+<td>Cached perceptual hashes</td>
+</tr>
+<tr>
+<td>32</td>
+<td><code>createdAt</code></td>
+<td>TIMESTAMP</td>
+<td>ISO 8601</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Submission timestamp</td>
+</tr>
+<tr>
+<td>33</td>
+<td><code>reviewed_by</code></td>
+<td>STRING</td>
+<td>Admin UID</td>
+<td>No</td>
+<td>NULL</td>
+<td>Admin who reviewed</td>
+</tr>
+<tr>
+<td>34</td>
+<td><code>reviewed_at</code></td>
+<td>TIMESTAMP</td>
+<td>ISO 8601</td>
+<td>No</td>
+<td>NULL</td>
+<td>Review timestamp</td>
+</tr>
+<tr>
+<td>35</td>
+<td><code>admin_note</code></td>
+<td>STRING (TEXT)</td>
+<td>max 500 chars</td>
+<td>No</td>
+<td>NULL</td>
+<td>Admin review note</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Category-Specific Fields (conditional, based on <code>category</code>):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Extra Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Electronics</td>
+<td><code>os</code> (STRING), <code>storage</code> (STRING)</td>
+</tr>
+<tr>
+<td>Pets</td>
+<td><code>name</code> (STRING), <code>breed</code> (STRING), <code>microchipId</code> (STRING), <code>collarColor</code> (STRING), <code>age</code> (STRING)</td>
+</tr>
+<tr>
+<td>Person</td>
+<td><code>name</code> (STRING), <code>age</code> (NUMBER), <code>gender</code> (STRING), <code>height</code> (STRING), <code>lastSeenWearing</code> (STRING)</td>
+</tr>
+<tr>
+<td>Wallet/Money</td>
+<td><code>documentType</code> (STRING), <code>contents</code> (STRING)</td>
+</tr>
+<tr>
+<td>Jewelry</td>
+<td><code>material</code> (STRING), <code>jewelryWeight</code> (STRING)</td>
+</tr>
+<tr>
+<td>Keys</td>
+<td><code>numberOfKeys</code> (NUMBER), <code>keyType</code> (STRING), <code>keychain</code> (STRING)</td>
+</tr>
+<tr>
+<td>Vehicles</td>
+<td><code>vehicleType</code> (STRING), <code>licensePlate</code> (STRING), <code>vin</code> (STRING)</td>
+</tr>
+<tr>
+<td>Clothing</td>
+<td><code>brand</code> (STRING), <code>size</code> (STRING)</td>
+</tr>
+<tr>
+<td>Musical Instruments</td>
+<td><code>instrumentType</code> (STRING), <code>serialNumber</code> (STRING)</td>
+</tr>
+<tr>
+<td>Glasses</td>
+<td><code>eyewearType</code> (STRING), <code>frameColor</code> (STRING), <code>lensColor</code> (STRING)</td>
+</tr>
+<tr>
+<td>Bags</td>
+<td><code>brand</code> (STRING), <code>contents</code> (STRING)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-3-matches">Table 3: MATCHES</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Size/Format</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>matchId</code></td>
+<td>STRING</td>
+<td>Auto-generated push key</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Primary Key</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>lostItemId</code></td>
+<td>STRING</td>
+<td>Item push key</td>
+<td>Yes</td>
+<td>—</td>
+<td>FK → ITEMS.itemId (lost)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>foundItemId</code></td>
+<td>STRING</td>
+<td>Item push key</td>
+<td>Yes</td>
+<td>—</td>
+<td>FK → ITEMS.itemId (found)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>matchScore</code></td>
+<td>FLOAT</td>
+<td>0–100</td>
+<td>Yes</td>
+<td>—</td>
+<td>Composite match score</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>status</code></td>
+<td>STRING (ENUM)</td>
+<td><code>pending</code>|<code>resolved</code>|<code>rejected</code></td>
+<td>Yes</td>
+<td><code>&quot;pending&quot;</code></td>
+<td>Match status</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>text_score</code></td>
+<td>FLOAT</td>
+<td>0.0–1.0</td>
+<td>Yes</td>
+<td>—</td>
+<td>Text similarity score</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>image_score</code></td>
+<td>FLOAT</td>
+<td>0.0–1.0</td>
+<td>Yes</td>
+<td>—</td>
+<td>Image similarity score</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>location_score</code></td>
+<td>FLOAT</td>
+<td>0.0–1.0</td>
+<td>Yes</td>
+<td>—</td>
+<td>Location proximity score</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>time_score</code></td>
+<td>FLOAT</td>
+<td>0.0–1.0</td>
+<td>Yes</td>
+<td>—</td>
+<td>Time overlap score</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>createdAt</code></td>
+<td>TIMESTAMP</td>
+<td>ISO 8601</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Match creation timestamp</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>resolvedAt</code></td>
+<td>TIMESTAMP</td>
+<td>ISO 8601</td>
+<td>No</td>
+<td>NULL</td>
+<td>Resolution timestamp</td>
+</tr>
+</tbody>
+</table>
+<h4 id="table-4-notifications">Table 4: NOTIFICATIONS</h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Field Name</th>
+<th>Data Type</th>
+<th>Size/Format</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>notificationId</code></td>
+<td>STRING</td>
+<td>Auto-generated push key</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Primary Key</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>userId</code></td>
+<td>STRING</td>
+<td>28 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>FK → USERS.uid</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>type</code></td>
+<td>STRING (ENUM)</td>
+<td><code>match_found</code>|<code>item_approved</code>|<code>item_rejected</code>|<code>system</code></td>
+<td>Yes</td>
+<td>—</td>
+<td>Notification type</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>message</code></td>
+<td>STRING (TEXT)</td>
+<td>max 500 chars</td>
+<td>Yes</td>
+<td>—</td>
+<td>Notification message</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>matchId</code></td>
+<td>STRING</td>
+<td>Match push key</td>
+<td>No</td>
+<td>NULL</td>
+<td>FK → MATCHES.matchId</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>read</code></td>
+<td>BOOLEAN</td>
+<td>true/false</td>
+<td>Yes</td>
+<td><code>false</code></td>
+<td>Read/unread status</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>createdAt</code></td>
+<td>TIMESTAMP</td>
+<td>ISO 8601</td>
+<td>Yes</td>
+<td>Auto</td>
+<td>Creation timestamp</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="533-normalization-1nf-2nf-3nf">5.3.3 Normalization (1NF, 2NF, 3NF)</h3>
+<p>Although Firebase RTDB is a NoSQL database, KhojTalas's data model is designed to follow relational normalization principles where applicable.</p>
+<h4 id="first-normal-form-1nf">First Normal Form (1NF)</h4>
+<blockquote>
+<p><strong>Rule:</strong> Every column must contain atomic (indivisible) values. No repeating groups.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>1NF Compliance</th>
+<th>Analysis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>USERS</strong></td>
+<td>✅ Compliant</td>
+<td>All fields are atomic. Notification preferences are stored as individual boolean fields (<code>emailOnApproval</code>, <code>emailOnMatch</code>, <code>inAppNotifications</code>) rather than as an array.</td>
+</tr>
+<tr>
+<td><strong>ITEMS</strong></td>
+<td>⚠️ Partial</td>
+<td><code>text_embedding</code> (384-element float array) and <code>image_hashes</code> (string array) are multi-valued. However, these are <strong>cached computed values</strong> used only by the matching engine, not user-facing data. They are stored as arrays for performance optimization. All user-facing fields are atomic.</td>
+</tr>
+<tr>
+<td><strong>MATCHES</strong></td>
+<td>✅ Compliant</td>
+<td>All fields are atomic scalar values. Individual score components are stored as separate fields (<code>text_score</code>, <code>image_score</code>, <code>location_score</code>, <code>time_score</code>).</td>
+</tr>
+<tr>
+<td><strong>NOTIFICATIONS</strong></td>
+<td>✅ Compliant</td>
+<td>All fields are atomic.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>1NF Resolution for ITEMS:</strong> The <code>text_embedding</code> and <code>image_hashes</code> fields are computed caches, not primary data. If strict 1NF were required, they could be extracted to a separate <code>ITEM_EMBEDDINGS</code> table:</p>
+<pre class="hljs"><code><div>ITEM_EMBEDDINGS (itemId FK, dimension_index INT, value FLOAT)
+ITEM_IMAGE_HASHES (itemId FK, hash_index INT, hash_value STRING)
+</div></code></pre>
+<p>However, this is not done because:</p>
+<ol>
+<li>These are transient computed caches, not user data</li>
+<li>Separating them would severely degrade matching performance</li>
+<li>They are accessed atomically (always read/written as a complete set)</li>
+</ol>
+<h4 id="second-normal-form-2nf">Second Normal Form (2NF)</h4>
+<blockquote>
+<p><strong>Rule:</strong> Must be in 1NF and every non-key attribute must depend on the entire primary key (no partial dependencies).</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Primary Key</th>
+<th>2NF Compliance</th>
+<th>Analysis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>USERS</strong></td>
+<td><code>uid</code> (single)</td>
+<td>✅ Compliant</td>
+<td>Single-column PK — partial dependency is impossible. All fields (<code>email</code>, <code>name</code>, <code>phone</code>, <code>role</code>, etc.) depend fully on <code>uid</code>.</td>
+</tr>
+<tr>
+<td><strong>ITEMS</strong></td>
+<td><code>itemId</code> (single)</td>
+<td>✅ Compliant</td>
+<td>Single-column PK. All fields (<code>userId</code>, <code>type</code>, <code>category</code>, <code>description</code>, etc.) depend fully on <code>itemId</code>.</td>
+</tr>
+<tr>
+<td><strong>MATCHES</strong></td>
+<td><code>matchId</code> (single)</td>
+<td>✅ Compliant</td>
+<td>Single-column PK. <code>lostItemId</code>, <code>foundItemId</code>, scores all depend fully on <code>matchId</code>. Note: <code>(lostItemId, foundItemId)</code> forms a natural candidate key.</td>
+</tr>
+<tr>
+<td><strong>NOTIFICATIONS</strong></td>
+<td><code>notificationId</code> (single)</td>
+<td>✅ Compliant</td>
+<td>Single-column PK. All fields depend on <code>notificationId</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2NF Analysis:</strong> All tables use single-column primary keys (auto-generated push IDs), so partial dependencies cannot exist. The schema is inherently in 2NF.</p>
+<h4 id="third-normal-form-3nf">Third Normal Form (3NF)</h4>
+<blockquote>
+<p><strong>Rule:</strong> Must be in 2NF and no non-key attribute should depend on another non-key attribute (no transitive dependencies).</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>3NF Compliance</th>
+<th>Analysis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>USERS</strong></td>
+<td>✅ Compliant</td>
+<td>No transitive dependencies. All fields are directly about the user.</td>
+</tr>
+<tr>
+<td><strong>ITEMS</strong></td>
+<td>⚠️ Intentional Denormalization</td>
+<td><code>contactName</code>, <code>contactEmail</code>, <code>contactPhone</code> could be derived from <code>userId → USERS</code>. These are intentionally denormalized for: (1) reporters may use different contact info per item, (2) performance — avoids a JOIN/lookup on every item display, (3) data independence — contact info persists even if user modifies profile. Additionally, <code>district</code> and <code>city</code> have a dependency (<code>city</code> → <code>district</code>), but are denormalized since Nepal's administrative hierarchy is static.</td>
+</tr>
+<tr>
+<td><strong>MATCHES</strong></td>
+<td>✅ Compliant</td>
+<td><code>matchScore</code> could be derived from the four component scores (text, image, location, time), but is stored for query performance and threshold filtering. All fields depend directly on the match, not on each other.</td>
+</tr>
+<tr>
+<td><strong>NOTIFICATIONS</strong></td>
+<td>✅ Compliant</td>
+<td>All fields depend directly on the notification. <code>userId</code> and <code>matchId</code> are foreign keys, not transitive dependencies.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3NF Denormalization Justification for ITEMS:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Denormalized Fields</th>
+<th>Reason</th>
+<th>Trade-off</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>contactName/Email/Phone</code></td>
+<td>User may provide different contact info per report</td>
+<td>Slight data redundancy vs. flexibility</td>
+</tr>
+<tr>
+<td><code>district</code> + <code>city</code></td>
+<td>Static Nepal hierarchy; always queried together</td>
+<td>Avoids lookup table JOIN</td>
+</tr>
+<tr>
+<td><code>reviewed_by</code> + <code>reviewed_at</code> + <code>admin_note</code></td>
+<td>Admin review metadata on the item itself</td>
+<td>Avoids a separate REVIEWS table for a 1:1 relationship</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Normalized Alternative (if strict 3NF required):</strong></p>
+<pre class="hljs"><code><div>CONTACTS (contactId PK, name, email, phone)
+ITEMS.contactId FK → CONTACTS.contactId
+
+LOCATIONS (locationId PK, district, city, lat, lng, description)
+ITEMS.locationFromId FK → LOCATIONS.locationId
+ITEMS.locationToId FK → LOCATIONS.locationId
+
+REVIEWS (reviewId PK, itemId FK, adminId FK, action, note, timestamp)
+</div></code></pre>
+<blockquote>
+<p><strong>Design Decision:</strong> KhojTalas intentionally uses controlled denormalization for performance and simplicity, as the application is read-heavy and Firebase RTDB does not support JOIN operations.</p>
+</blockquote>
+<hr>
+<h3 id="534-constraints-pk-fk-unique-not-null">5.3.4 Constraints (PK, FK, Unique, Not Null)</h3>
+<p>Since Firebase RTDB does not enforce constraints at the database level, all constraints are enforced through <strong>application-level validation</strong> and <strong>Firebase Security Rules</strong>.</p>
+<h4 id="primary-key-constraints">Primary Key Constraints</h4>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>PK Field</th>
+<th>Type</th>
+<th>Generation Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USERS</td>
+<td><code>uid</code></td>
+<td>STRING(28)</td>
+<td>Firebase Auth auto-generated UID</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>itemId</code></td>
+<td>STRING(20)</td>
+<td>Firebase RTDB <code>push()</code> key</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>matchId</code></td>
+<td>STRING(20)</td>
+<td>Firebase RTDB <code>push()</code> key</td>
+</tr>
+<tr>
+<td>NOTIFICATIONS</td>
+<td><code>notificationId</code></td>
+<td>STRING(20)</td>
+<td>Firebase RTDB <code>push()</code> key</td>
+</tr>
+</tbody>
+</table>
+<p>All primary keys are:</p>
+<ul>
+<li><strong>Unique</strong> — guaranteed by Firebase (<code>push()</code> generates time-based unique IDs)</li>
+<li><strong>Not Null</strong> — required for record creation</li>
+<li><strong>Immutable</strong> — never updated after creation</li>
+</ul>
+<h4 id="foreign-key-constraints">Foreign Key Constraints</h4>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>FK Field</th>
+<th>References</th>
+<th>On Delete</th>
+<th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ITEMS</td>
+<td><code>userId</code></td>
+<td>USERS.<code>uid</code></td>
+<td>Application-level cascade</td>
+<td>Security rules verify auth.uid matches</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>reviewed_by</code></td>
+<td>USERS.<code>uid</code></td>
+<td>SET NULL</td>
+<td>Application-level</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>lostItemId</code></td>
+<td>ITEMS.<code>itemId</code></td>
+<td>Restrict (match persists)</td>
+<td>Application-level check before creation</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>foundItemId</code></td>
+<td>ITEMS.<code>itemId</code></td>
+<td>Restrict (match persists)</td>
+<td>Application-level check before creation</td>
+</tr>
+<tr>
+<td>NOTIFICATIONS</td>
+<td><code>userId</code></td>
+<td>USERS.<code>uid</code></td>
+<td>Cascade (delete with user)</td>
+<td>Application-level</td>
+</tr>
+<tr>
+<td>NOTIFICATIONS</td>
+<td><code>matchId</code></td>
+<td>MATCHES.<code>matchId</code></td>
+<td>SET NULL</td>
+<td>Optional field</td>
+</tr>
+</tbody>
+</table>
+<h4 id="unique-constraints">Unique Constraints</h4>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Field(s)</th>
+<th>Scope</th>
+<th>Enforcement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USERS</td>
+<td><code>uid</code></td>
+<td>Global</td>
+<td>Firebase Auth (system-guaranteed)</td>
+</tr>
+<tr>
+<td>USERS</td>
+<td><code>email</code></td>
+<td>Global</td>
+<td>Firebase Auth (system-guaranteed)</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>itemId</code></td>
+<td>Global</td>
+<td>Firebase RTDB push key (system-guaranteed)</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>(lostItemId, foundItemId)</code></td>
+<td>Composite</td>
+<td>Application-level check in <code>run_matching()</code> — prevents duplicate matches between the same pair</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>matchId</code></td>
+<td>Global</td>
+<td>Firebase RTDB push key (system-guaranteed)</td>
+</tr>
+<tr>
+<td>NOTIFICATIONS</td>
+<td><code>notificationId</code></td>
+<td>Global</td>
+<td>Firebase RTDB push key (system-guaranteed)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="not-null-constraints">Not Null Constraints</h4>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Not Null Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>USERS</strong></td>
+<td><code>uid</code>, <code>email</code>, <code>name</code>, <code>role</code>, <code>createdAt</code></td>
+</tr>
+<tr>
+<td><strong>ITEMS</strong></td>
+<td><code>itemId</code>, <code>userId</code>, <code>type</code>, <code>category</code>, <code>status</code>, <code>description</code>, <code>locationFromLat</code>, <code>locationFromLng</code>, <code>timeFrom</code>, <code>contactName</code>, <code>contactEmail</code>, <code>contactPhone</code>, <code>createdAt</code></td>
+</tr>
+<tr>
+<td><strong>MATCHES</strong></td>
+<td><code>matchId</code>, <code>lostItemId</code>, <code>foundItemId</code>, <code>matchScore</code>, <code>status</code>, <code>text_score</code>, <code>image_score</code>, <code>location_score</code>, <code>time_score</code>, <code>createdAt</code></td>
+</tr>
+<tr>
+<td><strong>NOTIFICATIONS</strong></td>
+<td><code>notificationId</code>, <code>userId</code>, <code>type</code>, <code>message</code>, <code>read</code>, <code>createdAt</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="check-constraints-application-level-validation">Check Constraints (Application-Level Validation)</h4>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Field</th>
+<th>Constraint</th>
+<th>Validation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USERS</td>
+<td><code>role</code></td>
+<td>IN (<code>'user'</code>, <code>'admin'</code>)</td>
+<td><code>AuthContext.tsx</code></td>
+</tr>
+<tr>
+<td>USERS</td>
+<td><code>phone</code></td>
+<td>Regex: <code>^(98\|97)\d{8}$</code></td>
+<td>Frontend form validation</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>type</code></td>
+<td>IN (<code>'lost'</code>, <code>'found'</code>)</td>
+<td>Form submission</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>status</code></td>
+<td>IN (<code>'pending'</code>, <code>'approved'</code>, <code>'rejected'</code>, <code>'resolved'</code>)</td>
+<td>State machine in <code>useAdmin.ts</code></td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>category</code></td>
+<td>IN (12+ predefined values)</td>
+<td>Category selector component</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>locationFromLat</code></td>
+<td>Range: 26.0–30.5 (Nepal bounds)</td>
+<td>Map picker validation</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>locationFromLng</code></td>
+<td>Range: 80.0–88.5 (Nepal bounds)</td>
+<td>Map picker validation</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>photoData</code></td>
+<td>Max 250 KB (Base64)</td>
+<td>Frontend upload handler</td>
+</tr>
+<tr>
+<td>ITEMS</td>
+<td><code>videoData</code></td>
+<td>Max 400 KB (Base64)</td>
+<td>Frontend upload handler</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>matchScore</code></td>
+<td>Range: 0–100</td>
+<td><code>matching_service.py</code></td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>status</code></td>
+<td>IN (<code>'pending'</code>, <code>'resolved'</code>, <code>'rejected'</code>)</td>
+<td>Application logic</td>
+</tr>
+<tr>
+<td>MATCHES</td>
+<td><code>text_score</code></td>
+<td>Range: 0.0–1.0</td>
+<td><code>matching_service.py</code></td>
+</tr>
+<tr>
+<td>NOTIFICATIONS</td>
+<td><code>type</code></td>
+<td>IN (<code>'match_found'</code>, <code>'item_approved'</code>, <code>'item_rejected'</code>, <code>'system'</code>)</td>
+<td>Backend notification creation</td>
+</tr>
+<tr>
+<td>NOTIFICATIONS</td>
+<td><code>read</code></td>
+<td>Boolean</td>
+<td>Application default <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="firebase-security-rules-enforcement">Firebase Security Rules Enforcement</h4>
+<pre class="hljs"><code><div>{
+  <span class="hljs-attr">"rules"</span>: {
+    <span class="hljs-attr">"items"</span>: {
+      <span class="hljs-attr">"$itemId"</span>: {
+        <span class="hljs-attr">".read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">".write"</span>: <span class="hljs-string">"auth != null &amp;&amp; (
+          !data.exists() ||
+          data.child('userId').val() === auth.uid ||
+          root.child('users/' + auth.uid + '/role').val() === 'admin'
+        )"</span>
+      },
+      <span class="hljs-attr">".indexOn"</span>: [<span class="hljs-string">"status"</span>, <span class="hljs-string">"userId"</span>, <span class="hljs-string">"type"</span>, <span class="hljs-string">"createdAt"</span>]
+    },
+    <span class="hljs-attr">"users"</span>: {
+      <span class="hljs-attr">"$uid"</span>: {
+        <span class="hljs-attr">".read"</span>: <span class="hljs-string">"auth != null &amp;&amp; (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"</span>,
+        <span class="hljs-attr">".write"</span>: <span class="hljs-string">"auth != null &amp;&amp; (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"</span>
+      }
+    },
+    <span class="hljs-attr">"matches"</span>: {
+      <span class="hljs-attr">".read"</span>: <span class="hljs-string">"auth != null"</span>,
+      <span class="hljs-attr">"$matchId"</span>: {
+        <span class="hljs-attr">".write"</span>: <span class="hljs-string">"auth != null &amp;&amp; (
+          root.child('users/' + auth.uid + '/role').val() === 'admin' ||
+          !data.exists()
+        )"</span>
+      },
+      <span class="hljs-attr">".indexOn"</span>: [<span class="hljs-string">"status"</span>, <span class="hljs-string">"lostItemId"</span>, <span class="hljs-string">"foundItemId"</span>]
+    },
+    <span class="hljs-attr">"notifications"</span>: {
+      <span class="hljs-attr">".read"</span>: <span class="hljs-string">"auth != null"</span>,
+      <span class="hljs-attr">".write"</span>: <span class="hljs-string">"auth != null"</span>,
+      <span class="hljs-attr">".indexOn"</span>: [<span class="hljs-string">"userId"</span>, <span class="hljs-string">"read"</span>, <span class="hljs-string">"createdAt"</span>]
+    }
+  }
+}
+</div></code></pre>
+<hr>
+<h2 id="54-uml-diagrams">5.4 UML Diagrams</h2>
+<h3 id="541-class-diagram">5.4.1 Class Diagram</h3>
+<p>The class diagram shows the key classes/modules across the frontend and backend, their attributes, methods, and relationships.</p>
+<pre><code class="language-mermaid"><div class="mermaid">classDiagram
+    class AuthProvider {
+        -user: FirebaseUser
+        -profile: UserProfile
+        -loading: boolean
+        +useAuth() AuthContextType
+        -onAuthStateChanged()
+        -fetchOrCreateProfile()
+        -autoUpgradeAdmin()
+    }
+
+    class UserProfile {
+        +uid: string
+        +email: string
+        +name: string
+        +phone: string
+        +avatarUrl: string
+        +role: string
+        +is_active: boolean
+        +createdAt: timestamp
+        +notifications: NotificationPrefs
+    }
+
+    class NotificationPrefs {
+        +emailOnApproval: boolean
+        +emailOnMatch: boolean
+        +inAppNotifications: boolean
+    }
+
+    class Item {
+        +itemId: string
+        +userId: string
+        +type: string
+        +category: string
+        +status: string
+        +description: string
+        +brand: string
+        +model: string
+        +color: string
+        +secondaryColor: string
+        +district: string
+        +city: string
+        +locationFromLat: number
+        +locationFromLng: number
+        +locationToLat: number
+        +locationToLng: number
+        +timeFrom: string
+        +timeTo: string
+        +contactName: string
+        +contactEmail: string
+        +contactPhone: string
+        +photoData: string
+        +videoData: string
+        +estimatedValue: number
+        +policeReportFiled: boolean
+        +match_processed: boolean
+        +text_embedding: float[]
+        +image_hashes: string[]
+        +createdAt: timestamp
+    }
+
+    class Match {
+        +matchId: string
+        +lostItemId: string
+        +foundItemId: string
+        +matchScore: number
+        +status: string
+        +text_score: number
+        +image_score: number
+        +location_score: number
+        +time_score: number
+        +createdAt: timestamp
+        +resolvedAt: timestamp
+    }
+
+    class Notification {
+        +notificationId: string
+        +userId: string
+        +type: string
+        +message: string
+        +matchId: string
+        +read: boolean
+        +createdAt: timestamp
+    }
+
+    class MatchingService {
+        +compute_text_embedding(text) list_float
+        +compute_image_hash(image_path) string
+        +calculate_text_score(lost_emb, found_emb) float
+        +calculate_image_score(lost_hashes, found_hashes) float
+        +haversine_distance(lat1, lon1, lat2, lon2) float
+        +calculate_location_score(lost_loc, found_loc) float
+        +calculate_time_score(lost_time, found_time) float
+        +score_items(lost_item, found_item) dict
+    }
+
+    class CeleryMatchTask {
+        +run_matching(found_item_id) void
+        -load_found_item()
+        -query_approved_lost_items()
+        -create_match_record()
+        -send_notification()
+    }
+
+    class CeleryEmailTask {
+        +send_match_email(owner_email, lost_item, found_item, scores) void
+        -build_html_template()
+        -send_smtp()
+    }
+
+    class FastAPIApp {
+        +health_check() dict
+        +create_found_item(item_data) dict
+        +get_match(match_id) dict
+        +get_my_matches(user_id) list
+        +resolve_item(item_id) dict
+        +websocket_endpoint(user_id, token) void
+        +get_notifications(user_id, page, size) dict
+        +mark_read(notification_id) dict
+        +mark_all_read(user_id) dict
+    }
+
+    class ConnectionManager {
+        -active_connections: dict
+        +connect(websocket, user_id) void
+        +disconnect(websocket, user_id) void
+        +send_to_user(user_id, message) void
+        +broadcast(message) void
+    }
+
+    class ClientMatchingService {
+        +buildPrompt(lostItem, foundItem) string
+        +buildInlineDataParts(item) any[]
+        +createMatchAndNotify(lostItem, foundItemId, score) string
+        +matchFoundItem(foundItemId, foundItem) void
+    }
+
+    class UseNotifications {
+        +notifications: Notification[]
+        +unreadCount: number
+        +markAsRead(id) void
+        +markAllRead() void
+    }
+
+    class UseAdmin {
+        +stats: AdminStats
+        +pendingItems: Item[]
+        +approvedItems: Item[]
+        +rejectedItems: Item[]
+        +users: UserProfile[]
+        +isLoading: boolean
+        +fetchStats() void
+        +fetchUsers() void
+        +reviewItem(id, action, note) void
+    }
+
+    UserProfile "1" *-- "1" NotificationPrefs
+    AuthProvider ..> UserProfile : manages
+    Item "1" --> "1" UserProfile : belongs to
+    Match "1" --> "2" Item : links lost and found
+    Notification "1" --> "1" UserProfile : targets
+    Notification "0..1" --> "0..1" Match : references
+    CeleryMatchTask --> MatchingService : uses
+    CeleryMatchTask --> CeleryEmailTask : triggers
+    FastAPIApp --> CeleryMatchTask : dispatches
+    FastAPIApp --> ConnectionManager : uses
+    ClientMatchingService --> Match : creates
+    ClientMatchingService --> Notification : creates
+    UseNotifications --> Notification : reads
+    UseAdmin --> Item : manages
+</div></code></pre>
+<hr>
+<h3 id="542-sequence-diagram">5.4.2 Sequence Diagram</h3>
+<p>This sequence diagram covers the complete lifecycle of a found item — from submission through admin review, AI matching, notification delivery, and resolution.</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    actor User as User (Browser)
+    participant React as React Frontend
+    participant FireAuth as Firebase Auth
+    participant FireRTDB as Firebase RTDB
+    participant FastAPI as FastAPI Backend
+    participant Celery as Celery Worker
+    participant ML as ML Services
+    participant SMTP as SMTP Server
+
+    Note over User, SMTP: === Phase 1: Report Found Item ===
+
+    User->>React: Fill "Report Found" form (4 steps)
+    React->>FireAuth: Verify auth token
+    FireAuth-->>React: Token valid
+    React->>FireRTDB: Save item {type: found, status: pending}
+    FireRTDB-->>React: Item saved (itemId)
+    React-->>User: "Item submitted for review"
+
+    Note over User, SMTP: === Phase 2: Admin Review ===
+
+    actor Admin as Admin
+    Admin->>React: Open Review Queue
+    React->>FireRTDB: Query items WHERE status=pending
+    FireRTDB-->>React: Pending items list
+    Admin->>React: Click "Approve" on item
+    React->>FireRTDB: UPDATE status=approved, reviewed_by, reviewed_at
+    React->>FireRTDB: CREATE notification {type: item_approved}
+    React->>FastAPI: POST /api/v1/found-items {item_data}
+    FastAPI->>Celery: run_matching.delay(found_item_id)
+    FastAPI-->>React: 202 Accepted
+
+    Note over User, SMTP: === Phase 3: AI Matching Pipeline ===
+
+    Celery->>FireRTDB: Load found item by ID
+    FireRTDB-->>Celery: Found item data
+    Celery->>ML: compute_text_embedding(description)
+    ML-->>Celery: 384-dim embedding vector
+    Celery->>ML: compute_image_hash(photo)
+    ML-->>Celery: 256-bit perceptual hash
+    Celery->>FireRTDB: Cache embedding + hash on item
+    Celery->>FireRTDB: Query items WHERE type=lost, status=approved, category=same
+    FireRTDB-->>Celery: Approved lost items list
+
+    loop For each lost item in same category
+        Celery->>ML: calculate_text_score(lost_emb, found_emb)
+        ML-->>Celery: text_score (0-1)
+        Celery->>ML: calculate_image_score(lost_hashes, found_hashes)
+        ML-->>Celery: image_score (0-1)
+        Celery->>Celery: calculate_location_score(haversine)
+        Celery->>Celery: calculate_time_score(time window gap)
+        Celery->>Celery: composite = 0.45*text + 0.25*image + 0.20*location + 0.10*time
+    end
+
+    alt Composite Score >= 95%
+        Celery->>FireRTDB: CREATE match {lostItemId, foundItemId, scores, status: pending}
+        Celery->>FireRTDB: CREATE notification {userId: owner, type: match_found, matchId}
+        Celery->>SMTP: send_match_email(owner_email, items, scores)
+        SMTP-->>User: Email: "A possible match was found for your item!"
+    end
+
+    Celery->>FireRTDB: UPDATE found item {match_processed: true}
+
+    Note over User, SMTP: === Phase 4: User Reviews Match ===
+
+    User->>React: Click match notification
+    React->>FireRTDB: Fetch match + both items
+    FireRTDB-->>React: Match data with scores
+    React-->>User: Side-by-side comparison (lost vs found)
+    User->>React: Click "Mark as Resolved"
+    React->>FastAPI: PATCH /api/v1/lost-items/{id}/resolve
+    FastAPI->>FireRTDB: UPDATE lost item status=resolved
+    FastAPI->>FireRTDB: UPDATE found item status=resolved
+    FastAPI->>FireRTDB: UPDATE match status=resolved, resolvedAt=now
+    FastAPI-->>React: 200 OK
+    React-->>User: "Item successfully resolved!"
+</div></code></pre>
+<hr>
+<h3 id="543-use-case-diagram">5.4.3 Use Case Diagram</h3>
+<p>The use case diagram identifies all system actors and their interactions with the KhojTalas platform.</p>
+<pre><code class="language-mermaid"><div class="mermaid">graph TB
+    subgraph Actors
+        Guest["👤 Guest User\n(Unauthenticated)"]
+        User["👤 Registered User\n(Authenticated)"]
+        Admin["🔒 Admin\n(Admin Role)"]
+        System["⚙️ System\n(Backend/Celery)"]
+    end
+
+    subgraph AuthUC["Authentication Use Cases"]
+        UC1["UC-01: Register Account"]
+        UC2["UC-02: Login\n(Email/Google/GitHub/Facebook)"]
+        UC3["UC-03: Enable TOTP MFA"]
+        UC4["UC-04: Change Password"]
+        UC5["UC-05: Delete Account"]
+    end
+
+    subgraph ItemUC["Item Management Use Cases"]
+        UC6["UC-06: Report Lost Item\n(4-step form)"]
+        UC7["UC-07: Report Found Item\n(4-step form + video)"]
+        UC8["UC-08: Edit Own Item"]
+        UC9["UC-09: Delete Own Item"]
+        UC10["UC-10: Browse Items\n(Filter & Search)"]
+        UC11["UC-11: View Item Details"]
+    end
+
+    subgraph MatchUC["Matching Use Cases"]
+        UC12["UC-12: Run AI Matching\nPipeline"]
+        UC13["UC-13: View Match Details\n(Side-by-side)"]
+        UC14["UC-14: Mark Item\nas Resolved"]
+    end
+
+    subgraph NotifUC["Notification Use Cases"]
+        UC15["UC-15: Receive In-App\nNotification"]
+        UC16["UC-16: Receive Email\nNotification"]
+        UC17["UC-17: Mark Notifications\nRead"]
+        UC18["UC-18: Configure Notification\nPreferences"]
+    end
+
+    subgraph AdminUC["Administration Use Cases"]
+        UC19["UC-19: View Admin Dashboard\n(Stats & Metrics)"]
+        UC20["UC-20: Review Pending Items\n(Approve/Reject)"]
+        UC21["UC-21: Manage Users\n(Deactivate)"]
+        UC22["UC-22: View All Matches"]
+        UC23["UC-23: View Approved Items"]
+        UC24["UC-24: View Rejected Items"]
+    end
+
+    subgraph ProfileUC["Profile Use Cases"]
+        UC25["UC-25: Update Profile\n(Name, Phone, Avatar)"]
+        UC26["UC-26: View My Items"]
+    end
+
+    Guest --> UC10
+    Guest --> UC11
+    Guest --> UC1
+    Guest --> UC2
+
+    User --> UC2
+    User --> UC3
+    User --> UC4
+    User --> UC5
+    User --> UC6
+    User --> UC7
+    User --> UC8
+    User --> UC9
+    User --> UC10
+    User --> UC11
+    User --> UC13
+    User --> UC14
+    User --> UC15
+    User --> UC16
+    User --> UC17
+    User --> UC18
+    User --> UC25
+    User --> UC26
+
+    Admin --> UC19
+    Admin --> UC20
+    Admin --> UC21
+    Admin --> UC22
+    Admin --> UC23
+    Admin --> UC24
+
+    System --> UC12
+    System --> UC15
+    System --> UC16
+
+    UC20 -.->|"«triggers»"| UC12
+    UC12 -.->|"«on match ≥95%»"| UC15
+    UC12 -.->|"«on match ≥95%»"| UC16
+    UC6 -.->|"«creates pending»"| UC20
+    UC7 -.->|"«creates pending»"| UC20
+</div></code></pre>
+<h3 id="use-case-descriptions">Use Case Descriptions</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Use Case</th>
+<th>Actor(s)</th>
+<th>Precondition</th>
+<th>Postcondition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UC-01</td>
+<td>Register Account</td>
+<td>Guest</td>
+<td>None</td>
+<td>New user profile created in RTDB</td>
+</tr>
+<tr>
+<td>UC-02</td>
+<td>Login</td>
+<td>Guest, User</td>
+<td>Account exists</td>
+<td>Auth token issued, session active</td>
+</tr>
+<tr>
+<td>UC-03</td>
+<td>Enable TOTP MFA</td>
+<td>User</td>
+<td>Logged in</td>
+<td>MFA enrolled with backup codes</td>
+</tr>
+<tr>
+<td>UC-04</td>
+<td>Change Password</td>
+<td>User</td>
+<td>Logged in</td>
+<td>Password updated (8+ chars, 1 upper, 1 num, 1 special)</td>
+</tr>
+<tr>
+<td>UC-05</td>
+<td>Delete Account</td>
+<td>User</td>
+<td>Logged in, OTP verified</td>
+<td>Account + data removed</td>
+</tr>
+<tr>
+<td>UC-06</td>
+<td>Report Lost Item</td>
+<td>User</td>
+<td>Logged in</td>
+<td>Item saved with <code>status: pending</code></td>
+</tr>
+<tr>
+<td>UC-07</td>
+<td>Report Found Item</td>
+<td>User</td>
+<td>Logged in</td>
+<td>Item saved with <code>status: pending</code>, video required</td>
+</tr>
+<tr>
+<td>UC-08</td>
+<td>Edit Own Item</td>
+<td>User</td>
+<td>Owner of item</td>
+<td>Item updated in RTDB</td>
+</tr>
+<tr>
+<td>UC-09</td>
+<td>Delete Own Item</td>
+<td>User</td>
+<td>Owner of item</td>
+<td>Item removed from RTDB</td>
+</tr>
+<tr>
+<td>UC-10</td>
+<td>Browse Items</td>
+<td>Guest, User</td>
+<td>None</td>
+<td>Filtered list of approved items displayed</td>
+</tr>
+<tr>
+<td>UC-11</td>
+<td>View Item Details</td>
+<td>Guest, User</td>
+<td>Item is approved/resolved (or owner/admin for pending)</td>
+<td>Full item details shown</td>
+</tr>
+<tr>
+<td>UC-12</td>
+<td>Run AI Matching</td>
+<td>System</td>
+<td>Found item approved</td>
+<td>All lost items in category scored; matches ≥95% recorded</td>
+</tr>
+<tr>
+<td>UC-13</td>
+<td>View Match Details</td>
+<td>User</td>
+<td>Match exists for user's item</td>
+<td>Side-by-side comparison with scores</td>
+</tr>
+<tr>
+<td>UC-14</td>
+<td>Mark as Resolved</td>
+<td>User</td>
+<td>Match exists, pending</td>
+<td>Both items + match set to <code>resolved</code></td>
+</tr>
+<tr>
+<td>UC-15</td>
+<td>Receive In-App Notification</td>
+<td>User, System</td>
+<td>Notification created</td>
+<td>Toast shown, bell badge updated</td>
+</tr>
+<tr>
+<td>UC-16</td>
+<td>Receive Email Notification</td>
+<td>User, System</td>
+<td>User email prefs enabled</td>
+<td>Email delivered via SMTP</td>
+</tr>
+<tr>
+<td>UC-17</td>
+<td>Mark Notifications Read</td>
+<td>User</td>
+<td>Unread notifications exist</td>
+<td>Notifications marked as <code>read: true</code></td>
+</tr>
+<tr>
+<td>UC-18</td>
+<td>Configure Notification Prefs</td>
+<td>User</td>
+<td>Logged in</td>
+<td>Preferences updated in user profile</td>
+</tr>
+<tr>
+<td>UC-19</td>
+<td>View Admin Dashboard</td>
+<td>Admin</td>
+<td>Admin role</td>
+<td>Stats cards + recent pending items shown</td>
+</tr>
+<tr>
+<td>UC-20</td>
+<td>Review Pending Items</td>
+<td>Admin</td>
+<td>Pending items exist</td>
+<td>Item approved/rejected, notification sent</td>
+</tr>
+<tr>
+<td>UC-21</td>
+<td>Manage Users</td>
+<td>Admin</td>
+<td>Users exist</td>
+<td>User deactivated (not self)</td>
+</tr>
+<tr>
+<td>UC-22</td>
+<td>View All Matches</td>
+<td>Admin</td>
+<td>Matches exist</td>
+<td>Table of all system matches</td>
+</tr>
+<tr>
+<td>UC-23</td>
+<td>View Approved Items</td>
+<td>Admin</td>
+<td>Approved items exist</td>
+<td>Filtered list shown</td>
+</tr>
+<tr>
+<td>UC-24</td>
+<td>View Rejected Items</td>
+<td>Admin</td>
+<td>Rejected items exist</td>
+<td>Filtered list shown</td>
+</tr>
+<tr>
+<td>UC-25</td>
+<td>Update Profile</td>
+<td>User</td>
+<td>Logged in</td>
+<td>Profile fields updated</td>
+</tr>
+<tr>
+<td>UC-26</td>
+<td>View My Items</td>
+<td>User</td>
+<td>Logged in</td>
+<td>User's lost + found items listed</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>End of Design Diagrams Document</em></p>
+
+</body>
+</html>

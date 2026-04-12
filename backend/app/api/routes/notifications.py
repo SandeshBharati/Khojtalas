@@ -1,14 +1,12 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query, HTTPException, Depends
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query, HTTPException
 from typing import Dict, List
-import json
-from datetime import datetime
+from app.firebase_admin_init import get_db
 
 router = APIRouter()
 
+
 class ConnectionManager:
     def __init__(self):
-        # Dict of user_id -> list of active WebSocket connections
-        # (one user can have multiple tabs open)
         self.active_connections: Dict[str, List[WebSocket]] = {}
 
     async def connect(self, user_id: str, websocket: WebSocket):
@@ -39,67 +37,98 @@ class ConnectionManager:
                 except Exception as e:
                     print(f"Error broadcasting to user {user_id}: {e}")
 
+
 connection_manager = ConnectionManager()
 
-# Authentication:
-# - On WebSocket connect, read ?token= query param
-# - Decode JWT, extract user_id
-# - If invalid token -> close connection with code 4001
 
 def decode_token(token: str) -> str:
-    # Mock token decoding
-    # In a real app, use jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    """Decode a Firebase ID token or simple user_id token."""
     if not token:
         raise ValueError("No token provided")
-    # For testing, assume token is the user_id
+    # In production, verify with firebase_admin.auth.verify_id_token(token)
+    # For now, accept the token as-is (the user_id).
     return token
+
 
 @router.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: str, token: str = Query(None)):
     try:
-        # Authentication
         decoded_user_id = decode_token(token)
         if decoded_user_id != user_id:
             await websocket.close(code=4001)
             return
-    except Exception as e:
+    except Exception:
         await websocket.close(code=4001)
         return
 
     await connection_manager.connect(user_id, websocket)
     try:
         while True:
-            # Keep connection alive
             data = await websocket.receive_text()
     except WebSocketDisconnect:
         connection_manager.disconnect(user_id, websocket)
 
+
 # REST Endpoints
 
-@router.get("/")
-async def get_notifications(page: int = 1, size: int = 20, type: str = None):
-    """
-    GET /api/v1/notifications
-    -> paginated list for current user
-    -> query params: ?page=1&size=20&type=MATCH_FOUND
-    """
-    # Mock implementation
-    return {"items": [], "total": 0, "page": page, "size": size}
 
-@router.patch("/{id}/read")
-async def mark_notification_read(id: int):
+@router.get("/")
+async def get_notifications(user_id: str = "", page: int = 1, size: int = 20, type: str = None):
+    """
+    GET /api/v1/notifications?user_id=xxx&page=1&size=20&type=match_found
+    Returns paginated notifications for the given user.
+    """
+    try:
+        fb = get_db()
+        all_notifs = fb.reference("notifications").order_by_child("userId").equal_to(user_id).get() or {}
+
+        items = []
+        for nid, ndata in all_notifs.items():
+            if type and ndata.get("type") != type:
+                continue
+            items.append({"id": nid, **ndata})
+
+        # Sort by createdAt descending
+        items.sort(key=lambda n: n.get("createdAt", 0), reverse=True)
+
+        # Paginate
+        total = len(items)
+        start = (page - 1) * size
+        end = start + size
+        return {"items": items[start:end], "total": total, "page": page, "size": size}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{notification_id}/read")
+async def mark_notification_read(notification_id: str):
     """
     PATCH /api/v1/notifications/{id}/read
-    -> mark single notification as read
+    Marks a single notification as read.
     """
-    # Mock implementation
-    return {"status": "success"}
+    try:
+        fb = get_db()
+        fb.reference(f"notifications/{notification_id}").update({"read": True})
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.patch("/read-all")
-async def mark_all_notifications_read():
+async def mark_all_notifications_read(user_id: str = ""):
     """
-    PATCH /api/v1/notifications/read-all
-    -> mark all as read
+    PATCH /api/v1/notifications/read-all?user_id=xxx
+    Marks all notifications as read for the given user.
     """
-    # Mock implementation
-    return {"status": "success"}
+    try:
+        fb = get_db()
+        notifs = fb.reference("notifications").order_by_child("userId").equal_to(user_id).get() or {}
+        updates = {}
+        for nid, ndata in notifs.items():
+            if not ndata.get("read"):
+                updates[f"notifications/{nid}/read"] = True
+        if updates:
+            fb.reference().update(updates)
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

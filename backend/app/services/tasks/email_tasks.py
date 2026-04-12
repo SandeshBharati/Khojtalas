@@ -1,9 +1,11 @@
-from celery import shared_task
-# import smtplib
-# from email.mime.multipart import MIMEMultipart
-# from email.mime.text import MIMEText
+import os
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from app.celery_app import celery_app
 
-@shared_task
+
+@celery_app.task
 def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores: dict):
     """
     Trigger: called from run_matching task when score >= 0.95
@@ -11,7 +13,7 @@ def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores
     total_score = scores['total_score']
     score_pct = f"{total_score * 100:.1f}"
     
-    subject = f"🎉 Someone found your lost {lost_item['title']} — {score_pct}% match"
+    subject = f"Someone found your lost {lost_item.get('category', 'item')} — {score_pct}% match"
     
     # HTML body sections:
     # 1. KhojTalas branded header (dark #1a1a18 bg, orange logo)
@@ -35,11 +37,15 @@ def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores
     
     badge_color = "green" if total_score >= 0.97 else "orange"
     badge_text = "Excellent match" if total_score >= 0.97 else "Strong match"
+    app_url = os.getenv("APP_URL", "http://localhost:3000")
+    
+    lost_title = lost_item.get('brand', lost_item.get('category', 'item'))
+    found_title = found_item.get('brand', found_item.get('category', 'item'))
     
     html_content = f"""
     <html>
       <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
-        <div style="max-w-md mx-auto bg-white rounded-lg overflow-hidden shadow-lg">
+        <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
           <div style="background-color: #1a1a18; padding: 20px; text-align: center;">
             <h1 style="color: #E85D24; margin: 0;">KhojTalas</h1>
           </div>
@@ -52,13 +58,13 @@ def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores
             <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
               <div style="width: 48%; background-color: #f9f9f9; padding: 10px; border-radius: 5px;">
                 <h3 style="margin-top: 0; color: #555;">Your Lost Item</h3>
-                <p><strong>Title:</strong> {lost_item['title']}</p>
-                <p><strong>Lost Date:</strong> {lost_item.get('time', {}).get('lost_from', 'N/A')}</p>
+                <p><strong>Title:</strong> {lost_title}</p>
+                <p><strong>Lost Date:</strong> {lost_item.get('timeFrom', 'N/A')}</p>
               </div>
               <div style="width: 48%; background-color: #f9f9f9; padding: 10px; border-radius: 5px;">
                 <h3 style="margin-top: 0; color: #555;">Found Item</h3>
-                <p><strong>Title:</strong> {found_item['title']}</p>
-                <p><strong>Found Date:</strong> {found_item.get('time', {}).get('found_at', 'N/A')}</p>
+                <p><strong>Title:</strong> {found_title}</p>
+                <p><strong>Found Date:</strong> {found_item.get('timeFrom', 'N/A')}</p>
               </div>
             </div>
             
@@ -72,7 +78,7 @@ def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores
             </table>
             
             <div style="text-align: center;">
-              <a href="http://localhost:3000/item/{found_item['id']}" style="background-color: #E85D24; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">View Found Item</a>
+              <a href="{app_url}/item/{found_item.get('id', '')}" style="background-color: #E85D24; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">View Found Item</a>
             </div>
           </div>
           <div style="background-color: #f9f9f9; padding: 15px; text-align: center; color: #777; font-size: 12px;">
@@ -88,8 +94,8 @@ def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores
     
     {badge_text} - {score_pct}% Match
     
-    Your Lost Item: {lost_item['title']}
-    Found Item: {found_item['title']}
+    Your Lost Item: {lost_item.get('category', 'item')}
+    Found Item: {found_item.get('category', 'item')}
     
     Score Breakdown:
     Text match: {scores['text_score'] * 100:.1f}%
@@ -98,24 +104,35 @@ def send_match_email(owner_email: str, lost_item: dict, found_item: dict, scores
     Time match: {scores['time_score'] * 100:.1f}%
     Total score: {score_pct}%
     
-    View Found Item: http://localhost:3000/item/{found_item['id']}
+    View Found Item: {app_url}/item/{found_item.get('id', '')}
     
     If this is not your item, no action needed.
     """
     
-    # msg = MIMEMultipart('alternative')
-    # msg['Subject'] = subject
-    # msg['From'] = "KhojTalas <noreply@khojtalas.com>"
-    # msg['To'] = owner_email
+    smtp_host = os.getenv("SMTP_HOST", "")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_user = os.getenv("SMTP_USER", "")
+    smtp_pass = os.getenv("SMTP_PASS", "")
+    from_email = os.getenv("SMTP_FROM", "KhojTalas <noreply@khojtalas.com>")
     
-    # msg.attach(MIMEText(plain_text, 'plain'))
-    # msg.attach(MIMEText(html_content, 'html'))
+    if not smtp_host or not smtp_user:
+        print(f"[email] SMTP not configured — skipping email to {owner_email}")
+        return
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = from_email
+    msg['To'] = owner_email
     
-    # try:
-    #     server = smtplib.SMTP('localhost')
-    #     server.sendmail("noreply@khojtalas.com", owner_email, msg.as_string())
-    #     server.quit()
-    # except Exception as e:
-    #     print(f"Failed to send email: {e}")
+    msg.attach(MIMEText(plain_text, 'plain'))
+    msg.attach(MIMEText(html_content, 'html'))
     
-    print(f"Mock sending email to {owner_email} with subject: {subject}")
+    try:
+        server = smtplib.SMTP(smtp_host, smtp_port)
+        server.starttls()
+        server.login(smtp_user, smtp_pass)
+        server.sendmail(smtp_user, owner_email, msg.as_string())
+        server.quit()
+        print(f"[email] Sent match notification to {owner_email}")
+    except Exception as e:
+        print(f"[email] Failed to send to {owner_email}: {e}")

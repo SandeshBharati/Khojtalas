@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KhojTalas — Lost &amp; Found Platform Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   COLOR PALETTE — KhojTalas Brand
+   ============================================================
+   PRIMARY
+     Brand Orange:       #ff6b00
+     Brand Orange Hover: #E85D24
+     Brand Orange Light: #fff7ed  (orange-50)
+     Amber Accent:       #f59e0b
+
+   NEUTRALS (Slate scale)
+     Dark:      #0f172a  (brand-dark / slate-900)
+     Text:      #334155  (slate-700)
+     Muted:     #64748b  (slate-500)
+     Border:    #e2e8f0  (slate-200)
+     Surface:   #f8fafc  (slate-50)
+     White:     #ffffff
+
+   SEMANTIC
+     Lost / Red:    #ef4444
+     Found / Green: #10b981
+     Match / Blue:  #3b82f6
+     Purple Accent: #6b21a8
+
+   GRADIENT
+     Hero: #ff6b00 → #f97316 → #f59e0b
+   ============================================================ */
+
+:root {
+  --brand-orange: #ff6b00;
+  --brand-orange-hover: #E85D24;
+  --brand-orange-light: #fff7ed;
+  --brand-amber: #f59e0b;
+  --brand-dark: #0f172a;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748b;
+  --slate-400: #94a3b8;
+  --slate-300: #cbd5e1;
+  --slate-200: #e2e8f0;
+  --slate-100: #f1f5f9;
+  --slate-50: #f8fafc;
+  --red-500: #ef4444;
+  --emerald-500: #10b981;
+  --blue-500: #3b82f6;
+  --purple-600: #6b21a8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--slate-50);
+  color: var(--slate-700);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', 'Inter', sans-serif; color: var(--slate-900); }
+
+/* ---- Navigation ---- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--slate-200);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.65rem 2rem; transition: box-shadow 0.3s;
+}
+.nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+.nav-brand { font-family: 'Outfit'; font-weight: 800; font-size: 1.25rem; color: var(--brand-dark); text-decoration: none; display: flex; align-items: center; gap: 0.35rem; }
+.nav-brand span { color: var(--brand-orange); }
+.nav-links { display: flex; gap: 0.25rem; flex-wrap: wrap; justify-content: center; }
+.nav-links a {
+  padding: 0.35rem 0.7rem; border-radius: 6px; font-size: 0.72rem; font-weight: 500;
+  color: var(--slate-600); text-decoration: none; transition: all 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { background: var(--brand-orange-light); color: var(--brand-orange); }
+.slide-counter { font-size: 0.75rem; color: var(--slate-400); font-weight: 600; min-width: 50px; text-align: right; }
+
+/* ---- Slide Container ---- */
+.slide {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 5rem 2rem 3rem; position: relative; overflow: hidden;
+}
+.slide-inner { max-width: 1100px; width: 100%; }
+
+/* ---- Utility ---- */
+.text-center { text-align: center; }
+.text-orange { color: var(--brand-orange); }
+.text-muted { color: var(--slate-500); }
+.text-small { font-size: 0.85rem; }
+.badge {
+  display: inline-block; padding: 0.3rem 0.85rem; border-radius: 100px; font-size: 0.7rem;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.badge-orange { background: var(--brand-orange-light); color: var(--brand-orange); }
+.badge-dark { background: var(--slate-900); color: #fff; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+
+/* ---- Cards ---- */
+.card {
+  background: #fff; border: 1px solid var(--slate-200); border-radius: 16px;
+  padding: 1.75rem; transition: all 0.3s;
+}
+.card:hover { border-color: rgba(255,107,0,0.25); box-shadow: 0 8px 32px rgba(255,107,0,0.08); transform: translateY(-2px); }
+.card-icon {
+  width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin-bottom: 1rem;
+}
+.card-icon-orange { background: var(--brand-orange-light); }
+.card-icon-dark { background: var(--slate-900); color: #fff; }
+.card h4 { font-size: 1.05rem; margin-bottom: 0.4rem; }
+.card p { font-size: 0.85rem; color: var(--slate-500); line-height: 1.55; }
+
+/* ---- Slide Backgrounds ---- */
+.slide-hero {
+  background: linear-gradient(135deg, var(--brand-orange), #f97316, var(--brand-amber));
+  color: #fff; text-align: center; position: relative;
+}
+.slide-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.slide-hero .slide-inner { position: relative; z-index: 1; }
+.slide-hero h1 { font-size: 4rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 0.5rem; color: #fff; }
+.slide-hero .tagline { font-size: 1.35rem; opacity: 0.92; font-weight: 300; margin-bottom: 0.75rem; font-style: italic; }
+.slide-hero .subtitle { font-size: 1rem; opacity: 0.8; font-weight: 500; }
+.slide-hero .hero-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+
+.slide-dark { background: var(--brand-dark); color: var(--slate-300); }
+.slide-dark h2, .slide-dark h3, .slide-dark h4 { color: #fff; }
+.slide-dark .card { background: var(--slate-800); border-color: rgba(255,255,255,0.08); }
+.slide-dark .card:hover { border-color: rgba(255,107,0,0.4); }
+.slide-dark .card p { color: var(--slate-400); }
+
+.section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: var(--brand-orange); margin-bottom: 0.5rem; }
+.section-title { font-size: 2.25rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+.section-subtitle { font-size: 1rem; color: var(--slate-500); max-width: 600px; line-height: 1.6; }
+
+/* ---- Workflow ---- */
+.workflow { display: flex; align-items: flex-start; gap: 0; position: relative; flex-wrap: wrap; justify-content: center; }
+.workflow-step {
+  flex: 1; min-width: 140px; max-width: 180px; text-align: center; position: relative; padding: 0 0.5rem;
+}
+.workflow-step .step-num {
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1rem; margin: 0 auto 0.75rem;
+  background: linear-gradient(135deg, var(--brand-orange), var(--brand-amber));
+  color: #fff; box-shadow: 0 4px 16px rgba(255,107,0,0.3);
+}
+.workflow-step .step-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+.workflow-step h5 { font-size: 0.85rem; margin-bottom: 0.25rem; }
+.workflow-step p { font-size: 0.72rem; color: var(--slate-500); }
+.workflow-arrow {
+  display: flex; align-items: center; padding-top: 1.25rem; color: var(--brand-orange); font-size: 1.25rem; font-weight: 700;
+}
+
+/* ---- Tech Stack ---- */
+.tech-item {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem;
+  background: #fff; border: 1px solid var(--slate-200); border-radius: 12px; transition: all 0.2s;
+}
+.tech-item:hover { border-color: rgba(255,107,0,0.3); background: var(--brand-orange-light); }
+.tech-icon { font-size: 1.4rem; width: 36px; text-align: center; flex-shrink: 0; }
+.tech-name { font-weight: 600; font-size: 0.85rem; color: var(--slate-900); }
+.tech-desc { font-size: 0.7rem; color: var(--slate-500); }
+
+.slide-dark .tech-item { background: var(--slate-800); border-color: rgba(255,255,255,0.08); }
+.slide-dark .tech-item:hover { border-color: rgba(255,107,0,0.4); background: rgba(255,107,0,0.08); }
+.slide-dark .tech-name { color: #fff; }
+.slide-dark .tech-desc { color: var(--slate-400); }
+
+/* ---- Problem cards ---- */
+.problem-card {
+  display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem;
+  background: #fff; border: 1px solid var(--slate-200); border-radius: 14px;
+  border-left: 4px solid var(--red-500); transition: all 0.2s;
+}
+.problem-card:hover { box-shadow: 0 4px 20px rgba(239,68,68,0.08); }
+.problem-icon { font-size: 1.5rem; flex-shrink: 0; padding-top: 2px; }
+.problem-card h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+.problem-card p { font-size: 0.8rem; color: var(--slate-500); }
+
+/* ---- Solution cards ---- */
+.solution-card { border-left: 4px solid var(--emerald-500); }
+.solution-card:hover { box-shadow: 0 4px 20px rgba(16,185,129,0.08); }
+
+/* ---- Score Bar ---- */
+.score-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.score-label { font-size: 0.8rem; font-weight: 600; min-width: 90px; color: var(--slate-700); }
+.score-track { flex: 1; height: 8px; background: var(--slate-100); border-radius: 100px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 100px; transition: width 0.6s ease; }
+.score-fill-orange { background: linear-gradient(90deg, var(--brand-orange), var(--brand-amber)); }
+.score-fill-blue { background: linear-gradient(90deg, var(--blue-500), #60a5fa); }
+.score-fill-green { background: linear-gradient(90deg, var(--emerald-500), #34d399); }
+.score-fill-purple { background: linear-gradient(90deg, var(--purple-600), #a855f7); }
+
+/* ---- Thank-you ---- */
+.thankyou-bg {
+  background: linear-gradient(135deg, var(--brand-dark) 0%, #1a2744 50%, var(--brand-dark) 100%);
+  color: #fff; text-align: center;
+}
+.thankyou-bg h1 { color: #fff; }
+.thankyou-bg .brand-text { color: var(--brand-orange); }
+
+/* ---- Decorative ---- */
+.float-icon {
+  position: absolute; opacity: 0.06; font-size: 8rem; pointer-events: none;
+}
+
+/* ---- Color Palette Section ---- */
+.color-swatch {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+}
+.swatch-circle {
+  width: 64px; height: 64px; border-radius: 50%; border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.swatch-name { font-weight: 700; font-size: 0.8rem; color: var(--slate-900); }
+.swatch-hex { font-size: 0.7rem; color: var(--slate-500); font-family: 'Courier New', monospace; }
+
+/* Slide dark overrides for swatch */
+.slide-dark .swatch-name { color: #fff; }
+.slide-dark .swatch-hex { color: var(--slate-400); }
+
+/* ---- Divider ---- */
+.divider { width: 60px; height: 4px; border-radius: 2px; background: var(--brand-orange); margin: 1rem 0; }
+.divider-center { margin: 1rem auto; }
+
+/* ---- Future scope timeline ---- */
+.timeline-item { display: flex; gap: 1.25rem; margin-bottom: 1.5rem; }
+.timeline-dot {
+  width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+  background: var(--brand-orange); box-shadow: 0 0 0 4px rgba(255,107,0,0.15);
+}
+.timeline-content h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+.timeline-content p { font-size: 0.82rem; color: var(--slate-500); }
+
+/* ---- Animations ---- */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.animate { animation: fadeUp 0.6s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <a href="#slide-1" class="nav-brand"><span>Khoj</span>Talas</a>
+  <div class="nav-links">
+    <a href="#slide-1">Home</a>
+    <a href="#slide-2">Intro</a>
+    <a href="#slide-3">Problem</a>
+    <a href="#slide-4">Solution</a>
+    <a href="#slide-5">Features</a>
+    <a href="#slide-6">Unique</a>
+    <a href="#slide-7">Workflow</a>
+    <a href="#slide-8">Frontend</a>
+    <a href="#slide-9">Backend</a>
+    <a href="#slide-10">Database</a>
+    <a href="#slide-11">AI</a>
+    <a href="#slide-12">Colors</a>
+    <a href="#slide-13">Future</a>
+    <a href="#slide-14">Conclusion</a>
+    <a href="#slide-15">Thanks</a>
+  </div>
+  <div class="slide-counter" id="slideCounter">1 / 15</div>
+</nav>
+
+
+<!-- ============================================================
+     SLIDE 1 — Title
+     ============================================================ -->
+<section class="slide slide-hero" id="slide-1">
+  <span class="float-icon" style="top:10%;left:5%;">📍</span>
+  <span class="float-icon" style="bottom:10%;right:8%;">🗺️</span>
+  <span class="float-icon" style="top:20%;right:12%;font-size:5rem;">🔍</span>
+  <div class="slide-inner text-center">
+    <div style="margin-bottom:1.5rem;">
+      <span class="badge hero-badge" style="font-size:0.75rem;">Lost &amp; Found Platform for Nepal</span>
+    </div>
+    <h1>KhojTalas</h1>
+    <p class="tagline">"Because your lost things have a story."</p>
+    <p class="subtitle">A smart, AI-powered lost &amp; found platform designed for travelers across all 77 districts of Nepal</p>
+    <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <span style="background:rgba(255,255,255,0.2);padding:0.5rem 1.25rem;border-radius:100px;font-size:0.8rem;font-weight:500;">🤖 AI-Powered Matching</span>
+      <span style="background:rgba(255,255,255,0.2);padding:0.5rem 1.25rem;border-radius:100px;font-size:0.8rem;font-weight:500;">📍 77 Districts Coverage</span>
+      <span style="background:rgba(255,255,255,0.2);padding:0.5rem 1.25rem;border-radius:100px;font-size:0.8rem;font-weight:500;">🔔 Real-Time Alerts</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 2 — Introduction
+     ============================================================ -->
+<section class="slide" id="slide-2">
+  <div class="slide-inner">
+    <div class="grid-2" style="align-items:center;">
+      <div>
+        <p class="section-label">Introduction</p>
+        <h2 class="section-title">What is <span class="text-orange">KhojTalas</span>?</h2>
+        <div class="divider"></div>
+        <p class="section-subtitle" style="margin-bottom:1.5rem;">
+          KhojTalas (Nepali: <em>"search for it"</em>) is Nepal's dedicated lost &amp; found web platform that connects people who've lost their belongings with those who've found them — powered by AI matching technology.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:36px;height:36px;background:var(--brand-orange-light);border-radius:10px;display:flex;align-items:center;justify-content:center;">📝</span>
+            <span style="font-size:0.9rem;font-weight:500;">Report lost or found items with rich details</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:36px;height:36px;background:var(--brand-orange-light);border-radius:10px;display:flex;align-items:center;justify-content:center;">🤖</span>
+            <span style="font-size:0.9rem;font-weight:500;">AI matches items using text, image, location &amp; time</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:36px;height:36px;background:var(--brand-orange-light);border-radius:10px;display:flex;align-items:center;justify-content:center;">🔔</span>
+            <span style="font-size:0.9rem;font-weight:500;">Instant notifications when a match is found</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <span style="width:36px;height:36px;background:var(--brand-orange-light);border-radius:10px;display:flex;align-items:center;justify-content:center;">🇳🇵</span>
+            <span style="font-size:0.9rem;font-weight:500;">Covers all 77 districts &amp; 400+ municipalities</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <div style="width:320px;height:320px;border-radius:50%;background:linear-gradient(135deg,var(--brand-orange-light),#fef3c7);display:flex;align-items:center;justify-content:center;position:relative;">
+          <span style="font-size:8rem;">🔍</span>
+          <span style="position:absolute;top:15%;right:10%;font-size:2.5rem;">📍</span>
+          <span style="position:absolute;bottom:18%;left:8%;font-size:2.5rem;">📦</span>
+          <span style="position:absolute;top:50%;right:2%;font-size:2rem;">🔔</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 3 — Problem Statement
+     ============================================================ -->
+<section class="slide slide-dark" id="slide-3">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">The Problem</p>
+      <h2 class="section-title">Why Do Lost Items Stay Lost?</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-2">
+      <div class="problem-card" style="background:var(--slate-800);border-color:rgba(255,255,255,0.08);">
+        <span class="problem-icon">😰</span>
+        <div>
+          <h4 style="color:#fff;">No Dedicated Platform</h4>
+          <p style="color:var(--slate-400);">Nepal lacks a centralized, organized platform for reporting and finding lost items. People are left on their own.</p>
+        </div>
+      </div>
+      <div class="problem-card" style="background:var(--slate-800);border-color:rgba(255,255,255,0.08);">
+        <span class="problem-icon">📱</span>
+        <div>
+          <h4 style="color:#fff;">Social Media Limitations</h4>
+          <p style="color:var(--slate-400);">Facebook and TikTok posts get buried in feeds, have no search filters, and reach is algorithm-dependent.</p>
+        </div>
+      </div>
+      <div class="problem-card" style="background:var(--slate-800);border-color:rgba(255,255,255,0.08);">
+        <span class="problem-icon">🤷</span>
+        <div>
+          <h4 style="color:#fff;">Low Reporting Motivation</h4>
+          <p style="color:var(--slate-400);">Finders have little incentive to report items they've found — no reward system, no easy process.</p>
+        </div>
+      </div>
+      <div class="problem-card" style="background:var(--slate-800);border-color:rgba(255,255,255,0.08);">
+        <span class="problem-icon">🔓</span>
+        <div>
+          <h4 style="color:#fff;">Trust &amp; Scam Risks</h4>
+          <p style="color:var(--slate-400);">No verification process means anyone can claim ownership — leading to scams and false claims.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 4 — Solution Overview
+     ============================================================ -->
+<section class="slide" id="slide-4">
+  <div class="slide-inner">
+    <div class="grid-2" style="align-items:center;">
+      <div>
+        <p class="section-label">Our Solution</p>
+        <h2 class="section-title">Meet <span class="text-orange">KhojTalas</span></h2>
+        <div class="divider"></div>
+        <p style="font-size:0.95rem;color:var(--slate-600);margin-bottom:1.75rem;line-height:1.7;">
+          A dedicated, AI-powered lost &amp; found platform that makes reuniting people with their belongings simple, trustworthy, and efficient.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="problem-card solution-card">
+            <span class="problem-icon">✅</span>
+            <div>
+              <h4>Centralized Platform</h4>
+              <p>One place to report, search, and match — no more scattered social posts.</p>
+            </div>
+          </div>
+          <div class="problem-card solution-card">
+            <span class="problem-icon">🤖</span>
+            <div>
+              <h4>AI-Powered Matching</h4>
+              <p>Multi-factor algorithm analyzes text, images, location &amp; time to find matches automatically.</p>
+            </div>
+          </div>
+          <div class="problem-card solution-card">
+            <span class="problem-icon">🛡️</span>
+            <div>
+              <h4>Verified &amp; Moderated</h4>
+              <p>Admin approval + mandatory video upload prevents false claims and builds trust.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+        <div style="padding:2rem;background:linear-gradient(135deg,var(--brand-orange-light),#fef3c7);border-radius:24px;text-align:center;width:100%;max-width:380px;">
+          <div style="font-size:4rem;margin-bottom:1rem;">🎯</div>
+          <h3 style="font-size:1.5rem;margin-bottom:0.5rem;">95%+ Match Accuracy</h3>
+          <p style="font-size:0.85rem;color:var(--slate-600);">Our composite scoring system only notifies users when the AI is highly confident.</p>
+          <div style="margin-top:1.25rem;">
+            <div class="score-bar">
+              <span class="score-label">Text</span>
+              <div class="score-track"><div class="score-fill score-fill-orange" style="width:92%;"></div></div>
+            </div>
+            <div class="score-bar">
+              <span class="score-label">Image</span>
+              <div class="score-track"><div class="score-fill score-fill-blue" style="width:88%;"></div></div>
+            </div>
+            <div class="score-bar">
+              <span class="score-label">Location</span>
+              <div class="score-track"><div class="score-fill score-fill-green" style="width:95%;"></div></div>
+            </div>
+            <div class="score-bar">
+              <span class="score-label">Time</span>
+              <div class="score-track"><div class="score-fill score-fill-purple" style="width:90%;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 5 — Key Features
+     ============================================================ -->
+<section class="slide slide-dark" id="slide-5">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">Core Capabilities</p>
+      <h2 class="section-title">Key Features</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon card-icon-orange">📝</div>
+        <h4>Report Lost Items</h4>
+        <p>4-step form with 12+ categories, dynamic fields, map picker, photo &amp; video upload.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon-orange">📦</div>
+        <h4>Report Found Items</h4>
+        <p>Quick reporting with mandatory video verification to prove possession of the item.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon-orange">🛡️</div>
+        <h4>Admin Approval</h4>
+        <p>Every item goes through admin moderation before becoming publicly visible.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon-orange">💰</div>
+        <h4>Reward System</h4>
+        <p>Estimated value &amp; reward offering to incentivize finders to report items.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon-orange">🤖</div>
+        <h4>AI Matching System</h4>
+        <p>Text NLP + image hashing + geolocation + time analysis for high-confidence matches.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon card-icon-orange">📍</div>
+        <h4>Route Tracking</h4>
+        <p>Map-based start &amp; end points for lost items — perfect for items lost during travel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 6 — Unique Features
+     ============================================================ -->
+<section class="slide" id="slide-6">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">What Sets Us Apart</p>
+      <h2 class="section-title">Unique Features</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="border-top:4px solid var(--brand-orange);">
+        <div style="font-size:3rem;margin-bottom:1rem;">🎥</div>
+        <h4>Mandatory Video Upload</h4>
+        <p>Found items require video proof — ensuring the reporter actually has possession of the item. Builds trust between both parties.</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--emerald-500);">
+        <div style="font-size:3rem;margin-bottom:1rem;">🛡️</div>
+        <h4>Scam Prevention</h4>
+        <p>Admin review + video verification + detailed category-specific fields make fraudulent claims nearly impossible.</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--blue-500);">
+        <div style="font-size:3rem;margin-bottom:1rem;">🔔</div>
+        <h4>AI Match Notifications</h4>
+        <p>When the AI finds a match (≥95% confidence), both in-app and email notifications are sent instantly to the item owner.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 7 — System Workflow
+     ============================================================ -->
+<section class="slide slide-dark" id="slide-7">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">How It Works</p>
+      <h2 class="section-title">System Workflow</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="workflow">
+      <div class="workflow-step">
+        <div class="step-num">1</div>
+        <div class="step-icon">📝</div>
+        <h5 style="color:#fff;">Report Lost</h5>
+        <p style="color:var(--slate-400);">User submits lost item with details, photos &amp; location</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">2</div>
+        <div class="step-icon">📦</div>
+        <h5 style="color:#fff;">Report Found</h5>
+        <p style="color:var(--slate-400);">Another user reports a found item with video proof</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">3</div>
+        <div class="step-icon">✅</div>
+        <h5 style="color:#fff;">Admin Review</h5>
+        <p style="color:var(--slate-400);">Admin approves items after verification</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">4</div>
+        <div class="step-icon">🤖</div>
+        <h5 style="color:#fff;">AI Matching</h5>
+        <p style="color:var(--slate-400);">Multi-factor AI compares text, image, location &amp; time</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">5</div>
+        <div class="step-icon">🔔</div>
+        <h5 style="color:#fff;">Notification</h5>
+        <p style="color:var(--slate-400);">Owner gets instant alert via app &amp; email</p>
+      </div>
+      <div class="workflow-arrow">→</div>
+      <div class="workflow-step">
+        <div class="step-num">6</div>
+        <div class="step-icon">🎉</div>
+        <h5 style="color:#fff;">Resolved</h5>
+        <p style="color:var(--slate-400);">Owner claims item &amp; rewards finder</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 8 — Tech Stack: Frontend
+     ============================================================ -->
+<section class="slide" id="slide-8">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">Technology</p>
+      <h2 class="section-title">Frontend Stack</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-3">
+      <div class="tech-item">
+        <div class="tech-icon">⚛️</div>
+        <div><div class="tech-name">React 19</div><div class="tech-desc">UI Framework</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔷</div>
+        <div><div class="tech-name">TypeScript 5.8</div><div class="tech-desc">Type-Safe Development</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">⚡</div>
+        <div><div class="tech-name">Vite 6</div><div class="tech-desc">Build Tool &amp; Dev Server</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🎨</div>
+        <div><div class="tech-name">Tailwind CSS 4</div><div class="tech-desc">Utility-First Styling</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🧭</div>
+        <div><div class="tech-name">React Router 7</div><div class="tech-desc">Client-Side Routing</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🗺️</div>
+        <div><div class="tech-name">Leaflet Maps</div><div class="tech-desc">Interactive Map Views</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🎬</div>
+        <div><div class="tech-name">Motion</div><div class="tech-desc">Smooth Animations</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔥</div>
+        <div><div class="tech-name">Firebase SDK 12</div><div class="tech-desc">Auth, Database, Storage</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔔</div>
+        <div><div class="tech-name">Sonner</div><div class="tech-desc">Toast Notifications</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 9 — Tech Stack: Backend
+     ============================================================ -->
+<section class="slide slide-dark" id="slide-9">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">Technology</p>
+      <h2 class="section-title">Backend Stack</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-3">
+      <div class="tech-item">
+        <div class="tech-icon">🐍</div>
+        <div><div class="tech-name">Python / FastAPI</div><div class="tech-desc">REST API Framework</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🚀</div>
+        <div><div class="tech-name">Uvicorn</div><div class="tech-desc">ASGI Server</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📬</div>
+        <div><div class="tech-name">Celery + Redis</div><div class="tech-desc">Async Task Queue</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔐</div>
+        <div><div class="tech-name">Firebase Admin SDK</div><div class="tech-desc">Server-Side Auth &amp; DB</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🧠</div>
+        <div><div class="tech-name">Sentence Transformers</div><div class="tech-desc">Text NLP Embeddings</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🖼️</div>
+        <div><div class="tech-name">Pillow + ImageHash</div><div class="tech-desc">Perceptual Image Hashing</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📊</div>
+        <div><div class="tech-name">scikit-learn</div><div class="tech-desc">Cosine Similarity</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">🔑</div>
+        <div><div class="tech-name">python-jose (JWT)</div><div class="tech-desc">Token Authentication</div></div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-icon">📧</div>
+        <div><div class="tech-name">SMTP / EmailJS</div><div class="tech-desc">Email Notifications</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 10 — Database & Cloud
+     ============================================================ -->
+<section class="slide" id="slide-10">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">Infrastructure</p>
+      <h2 class="section-title">Database &amp; Cloud</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.75rem;">🔥</div>
+        <h4>Firebase Realtime DB</h4>
+        <p>Primary data store for items, matches, notifications &amp; users. Real-time sync across clients.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.75rem;">🔐</div>
+        <h4>Firebase Authentication</h4>
+        <p>Email/password + Google, GitHub, Facebook OAuth. Optional TOTP MFA for enhanced security.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.75rem;">📁</div>
+        <h4>Firebase Storage</h4>
+        <p>Secure media storage for item photos and videos with size validation (250KB/400KB limits).</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.75rem;">📬</div>
+        <h4>Redis</h4>
+        <p>Message broker for Celery task queue — handles async matching pipelines and email jobs.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.75rem;">▲</div>
+        <h4>Vercel</h4>
+        <p>Frontend hosting with SPA routing, instant deployments, and global CDN delivery.</p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:0.75rem;">🌐</div>
+        <h4>WebSocket</h4>
+        <p>Real-time notification delivery to connected clients — supports multi-device connections.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 11 — AI Integration
+     ============================================================ -->
+<section class="slide slide-dark" id="slide-11">
+  <div class="slide-inner">
+    <div class="grid-2" style="align-items:center;">
+      <div>
+        <p class="section-label">Intelligence Core</p>
+        <h2 class="section-title">AI-Powered Matching</h2>
+        <div class="divider"></div>
+        <p style="font-size:0.92rem;color:var(--slate-400);margin-bottom:1.75rem;line-height:1.7;">
+          Our multi-factor AI algorithm combines four independent scoring dimensions to produce high-confidence matches — only notifying users at ≥95% confidence.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,107,0,0.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📝</div>
+            <div>
+              <div style="font-weight:700;color:#fff;font-size:0.9rem;">Text Similarity (NLP)</div>
+              <div style="font-size:0.78rem;color:var(--slate-400);">384-dim embeddings via all-MiniLM-L6-v2 + cosine similarity</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(59,130,246,0.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">🖼️</div>
+            <div>
+              <div style="font-weight:700;color:#fff;font-size:0.9rem;">Image Similarity (pHash)</div>
+              <div style="font-size:0.78rem;color:var(--slate-400);">Perceptual hashing — compares visual fingerprints across all photo pairs</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📍</div>
+            <div>
+              <div style="font-weight:700;color:#fff;font-size:0.9rem;">Location Scoring (Haversine)</div>
+              <div style="font-size:0.78rem;color:var(--slate-400);">Great-circle distance: &lt;1km = 100%, 1–5km = linear decay, &gt;20km = 0%</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div style="width:48px;height:48px;border-radius:12px;background:rgba(107,33,168,0.15);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">⏰</div>
+            <div>
+              <div style="font-weight:700;color:#fff;font-size:0.9rem;">Time Window Analysis</div>
+              <div style="font-size:0.78rem;color:var(--slate-400);">Scores overlap between when item was lost and when it was found</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1.5rem;">
+        <div style="background:var(--slate-800);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem;width:100%;max-width:360px;">
+          <div style="text-align:center;margin-bottom:1.5rem;">
+            <div style="font-size:3rem;margin-bottom:0.5rem;">🎯</div>
+            <h3 style="font-size:1.6rem;color:var(--brand-orange);">96.8%</h3>
+            <p style="font-size:0.8rem;color:var(--slate-400);">Sample Composite Match Score</p>
+          </div>
+          <div class="score-bar">
+            <span class="score-label" style="color:var(--slate-300);">Text</span>
+            <div class="score-track" style="background:var(--slate-700);"><div class="score-fill score-fill-orange" style="width:94%;"></div></div>
+          </div>
+          <div class="score-bar">
+            <span class="score-label" style="color:var(--slate-300);">Image</span>
+            <div class="score-track" style="background:var(--slate-700);"><div class="score-fill score-fill-blue" style="width:91%;"></div></div>
+          </div>
+          <div class="score-bar">
+            <span class="score-label" style="color:var(--slate-300);">Location</span>
+            <div class="score-track" style="background:var(--slate-700);"><div class="score-fill score-fill-green" style="width:100%;"></div></div>
+          </div>
+          <div class="score-bar" style="margin-bottom:0;">
+            <span class="score-label" style="color:var(--slate-300);">Time</span>
+            <div class="score-track" style="background:var(--slate-700);"><div class="score-fill score-fill-purple" style="width:97%;"></div></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <span class="badge" style="background:rgba(16,185,129,0.15);color:#34d399;">≥97% Excellent</span>
+          <span class="badge" style="background:rgba(255,107,0,0.15);color:var(--brand-orange);">95–97% Strong</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 12 — Color Palette
+     ============================================================ -->
+<section class="slide" id="slide-12">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">Brand Identity</p>
+      <h2 class="section-title">Project Color Palette</h2>
+      <div class="divider divider-center"></div>
+      <p class="section-subtitle" style="margin:0 auto;">The exact color codes used throughout the KhojTalas platform — from brand identity to UI semantics.</p>
+    </div>
+
+    <!-- Primary Colors -->
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--brand-orange);">Primary Brand Colors</h3>
+    <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#ff6b00;"></div>
+        <div class="swatch-name">Brand Orange</div>
+        <div class="swatch-hex">#ff6b00</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#E85D24;"></div>
+        <div class="swatch-name">Orange Hover</div>
+        <div class="swatch-hex">#E85D24</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#f97316;"></div>
+        <div class="swatch-name">Orange 500</div>
+        <div class="swatch-hex">#f97316</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#f59e0b;"></div>
+        <div class="swatch-name">Amber Accent</div>
+        <div class="swatch-hex">#f59e0b</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#fff7ed;border-color:var(--slate-200);"></div>
+        <div class="swatch-name">Orange Light</div>
+        <div class="swatch-hex">#fff7ed</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#0f172a;"></div>
+        <div class="swatch-name">Brand Dark</div>
+        <div class="swatch-hex">#0f172a</div>
+      </div>
+    </div>
+
+    <!-- Neutral Colors -->
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--slate-600);">Neutral Palette (Slate)</h3>
+    <div style="display:flex;gap:1.25rem;flex-wrap:wrap;margin-bottom:2rem;">
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#0f172a;"></div>
+        <div class="swatch-name">Slate 900</div>
+        <div class="swatch-hex">#0f172a</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#1e293b;"></div>
+        <div class="swatch-name">Slate 800</div>
+        <div class="swatch-hex">#1e293b</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#334155;"></div>
+        <div class="swatch-name">Slate 700</div>
+        <div class="swatch-hex">#334155</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#64748b;"></div>
+        <div class="swatch-name">Slate 500</div>
+        <div class="swatch-hex">#64748b</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#94a3b8;"></div>
+        <div class="swatch-name">Slate 400</div>
+        <div class="swatch-hex">#94a3b8</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#e2e8f0;border-color:var(--slate-300);"></div>
+        <div class="swatch-name">Slate 200</div>
+        <div class="swatch-hex">#e2e8f0</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#f8fafc;border-color:var(--slate-200);"></div>
+        <div class="swatch-name">Slate 50</div>
+        <div class="swatch-hex">#f8fafc</div>
+      </div>
+    </div>
+
+    <!-- Semantic Colors -->
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--slate-600);">Semantic / Status Colors</h3>
+    <div style="display:flex;gap:1.25rem;flex-wrap:wrap;">
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#ef4444;"></div>
+        <div class="swatch-name">Lost / Error</div>
+        <div class="swatch-hex">#ef4444</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#10b981;"></div>
+        <div class="swatch-name">Found / Success</div>
+        <div class="swatch-hex">#10b981</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#3b82f6;"></div>
+        <div class="swatch-name">Match / Info</div>
+        <div class="swatch-hex">#3b82f6</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#6b21a8;"></div>
+        <div class="swatch-name">Admin / Role</div>
+        <div class="swatch-hex">#6b21a8</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-circle" style="background:#ffffff;border-color:var(--slate-200);"></div>
+        <div class="swatch-name">White</div>
+        <div class="swatch-hex">#ffffff</div>
+      </div>
+    </div>
+
+    <!-- Gradient -->
+    <h3 style="font-size:1rem;font-weight:700;margin:2rem 0 1rem;color:var(--slate-600);">Hero Gradient</h3>
+    <div style="height:56px;border-radius:14px;background:linear-gradient(135deg,#ff6b00,#f97316,#f59e0b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:0.85rem;letter-spacing:0.05em;">
+      #ff6b00 → #f97316 → #f59e0b
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 13 — Future Scope
+     ============================================================ -->
+<section class="slide slide-dark" id="slide-13">
+  <div class="slide-inner">
+    <div class="grid-2" style="align-items:center;">
+      <div>
+        <p class="section-label">What's Next</p>
+        <h2 class="section-title">Future Scope</h2>
+        <div class="divider"></div>
+        <div style="margin-top:1.5rem;">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4 style="color:#fff;">Physical Collection Offices</h4>
+              <p style="color:var(--slate-400);">Partner with local businesses across Nepal to serve as item drop-off and pickup centers.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4 style="color:#fff;">Courier System Integration</h4>
+              <p style="color:var(--slate-400);">Enable door-to-door delivery of matched items via local courier services.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4 style="color:#fff;">Partnerships &amp; Rewards</h4>
+              <p style="color:var(--slate-400);">Collaborate with transport companies, hotels, and airport authorities. Expand the reward ecosystem.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4 style="color:#fff;">Mobile App (React Native)</h4>
+              <p style="color:var(--slate-400);">Native mobile app for instant reporting on-the-go with camera integration and push notifications.</p>
+            </div>
+          </div>
+          <div class="timeline-item" style="margin-bottom:0;">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <h4 style="color:#fff;">Multi-Language Support</h4>
+              <p style="color:var(--slate-400);">Full Nepali language interface and support for regional dialects.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <div style="width:300px;height:300px;border-radius:50%;background:linear-gradient(135deg,rgba(255,107,0,0.1),rgba(245,158,11,0.1));display:flex;align-items:center;justify-content:center;border:2px dashed rgba(255,107,0,0.2);">
+          <span style="font-size:7rem;">🚀</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 14 — Conclusion
+     ============================================================ -->
+<section class="slide" id="slide-14">
+  <div class="slide-inner">
+    <div class="text-center" style="margin-bottom:2.5rem;">
+      <p class="section-label">Wrapping Up</p>
+      <h2 class="section-title">Conclusion</h2>
+      <div class="divider divider-center"></div>
+    </div>
+    <div class="grid-3" style="margin-bottom:2.5rem;">
+      <div class="card" style="text-align:center;border-top:4px solid var(--brand-orange);">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">💡</div>
+        <h4>Real Impact</h4>
+        <p>Gives every lost item a chance to be found — reducing stress and loss for travelers and residents across Nepal.</p>
+      </div>
+      <div class="card" style="text-align:center;border-top:4px solid var(--emerald-500);">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🤝</div>
+        <h4>Trust &amp; Reliability</h4>
+        <p>Admin moderation, video verification, and AI confidence scoring create a trustworthy ecosystem.</p>
+      </div>
+      <div class="card" style="text-align:center;border-top:4px solid var(--blue-500);">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🔭</div>
+        <h4>Vision</h4>
+        <p>To become Nepal's go-to platform for lost &amp; found — bridging technology and community to reunite what's been lost.</p>
+      </div>
+    </div>
+    <div style="text-align:center;padding:2rem;background:linear-gradient(135deg,var(--brand-orange-light),#fef3c7);border-radius:20px;">
+      <p style="font-size:1.5rem;font-weight:800;color:var(--brand-dark);font-family:'Outfit';">
+        <span class="text-orange">KhojTalas</span> — Reuniting Nepal, One Item at a Time.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SLIDE 15 — Thank You
+     ============================================================ -->
+<section class="slide thankyou-bg" id="slide-15">
+  <span class="float-icon" style="top:15%;left:8%;color:rgba(255,107,0,0.15);">📍</span>
+  <span class="float-icon" style="bottom:15%;right:10%;color:rgba(255,107,0,0.15);">🗺️</span>
+  <div class="slide-inner text-center" style="position:relative;z-index:1;">
+    <div style="margin-bottom:2rem;">
+      <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--brand-orange),var(--brand-amber));margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 40px rgba(255,107,0,0.3);">
+        <span style="font-size:3rem;">🙏</span>
+      </div>
+    </div>
+    <h1 style="font-size:3.5rem;font-weight:900;margin-bottom:0.75rem;">Thank You</h1>
+    <p style="font-size:1.5rem;font-weight:300;color:var(--slate-400);margin-bottom:0.5rem;">
+      <span class="brand-text" style="font-weight:700;">KhojTalas</span>
+    </p>
+    <p style="font-size:1.05rem;font-style:italic;color:var(--slate-500);margin-bottom:2rem;">
+      "Because your lost things have a story."
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <span style="padding:0.6rem 1.5rem;border-radius:100px;border:1px solid rgba(255,107,0,0.3);color:var(--brand-orange);font-size:0.85rem;font-weight:500;">Lost &amp; Found Platform</span>
+      <span style="padding:0.6rem 1.5rem;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:var(--slate-400);font-size:0.85rem;font-weight:500;">AI-Powered Matching</span>
+      <span style="padding:0.6rem 1.5rem;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:var(--slate-400);font-size:0.85rem;font-weight:500;">Made for Nepal 🇳🇵</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     Scripts
+     ============================================================ -->
+<script>
+// Sticky nav shadow on scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// Active nav link + slide counter
+const slides = document.querySelectorAll('.slide');
+const navLinks = document.querySelectorAll('.nav-links a');
+const counter = document.getElementById('slideCounter');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+      const idx = Array.from(slides).indexOf(entry.target) + 1;
+      counter.textContent = idx + ' / ' + slides.length;
+    }
+  });
+}, { threshold: 0.4 });
+
+slides.forEach(s => observer.observe(s));
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  const current = Array.from(slides).findIndex(s => {
+    const rect = s.getBoundingClientRect();
+    return rect.top >= -100 && rect.top <= window.innerHeight / 2;
+  });
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    const next = Math.min(current + 1, slides.length - 1);
+    slides[next].scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const prev = Math.max(current - 1, 0);
+    slides[prev].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+</script>
+
+</body>
+</html>

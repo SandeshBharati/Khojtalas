@@ -1,0 +1,31 @@
+{
+  "rules": {
+    "items": {
+      ".read": true,
+      ".indexOn": ["status", "userId", "type", "createdAt"],
+      "$itemId": {
+        ".write": "auth != null && (!data.exists() || data.child('userId').val() === auth.uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users/' + auth.uid + '/role').val() === 'admin')"
+      }
+    },
+    "matches": {
+      ".read": "auth != null",
+      ".indexOn": ["status", "lostItemId", "foundItemId"],
+      "$matchId": {
+        ".write": "auth != null && (root.child('users/' + auth.uid + '/role').val() === 'admin' || !data.exists())"
+      }
+    },
+    "notifications": {
+      ".read": "auth != null",
+      ".indexOn": ["userId", "read", "createdAt"],
+      "$notifId": {
+        ".write": "auth != null"
+      }
+    }
+  }
+}

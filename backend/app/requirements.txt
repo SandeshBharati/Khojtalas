@@ -1,7 +1,10 @@
 fastapi
 uvicorn[standard]
-celery
+celery[redis]
 pillow
 imagehash
 sentence-transformers
 scikit-learn
+firebase-admin
+python-dotenv
+python-jose[cryptography]
